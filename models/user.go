@@ -1,12 +1,33 @@
 package models
 
-import "github.com/go-playground/validator/v10"
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
+	"time"
+)
 
 type User struct {
-	Name        string `json:"name"`
-	Email       string `json:"email"`
-	Password    string `json:"password"`
-	PhoneNumber int    `json:"phoneNumber"`
+	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key" json:"id,omitempty"`
+	Name        string    `gorm:"varchar(255);not null;index" json:"name"`
+	Email       string    `gorm:"not null;unique" json:"email"`
+	Password    string    `gorm:"not null" json:"password"`
+	PhoneNumber int       `gorm:"not null" json:"phoneNumber"`
+	CreatedAt   time.Time `gorm:"not null" json:"createdAt,omitempty"`
+	UpdatedAt   time.Time `gorm:"not null" json:"updatedAt,omitempty"`
+}
+
+type CreateUserSchema struct {
+	Name        string `json:"name" validate:"required"`
+	Email       string `json:"email" validate:"email,required"`
+	Password    string `json:"password" validate:"required,min=10"`
+	PhoneNumber int    `json:"phoneNumber" validate:"required"`
+}
+
+type UpdateUserSchema struct {
+	Name        string `json:"name,omitempty"`
+	Email       string `json:"email,omitempty"`
+	Password    string `json:"password,omitempty"`
+	PhoneNumber int    `json:"phoneNumber,omitempty"`
 }
 
 type ErrorResponse struct {
