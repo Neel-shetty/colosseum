@@ -1,11 +1,10 @@
 package main
 
 import (
-	"log"
-
 	"github.com/Neel-shetty/go-fiber-server/handlers"
 	"github.com/Neel-shetty/go-fiber-server/initializers"
 	"github.com/gofiber/fiber/v2"
+	"log"
 )
 
 func init() {
