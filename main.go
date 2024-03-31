@@ -1,15 +1,17 @@
 package main
 
 import (
+	_ "github.com/Neel-shetty/go-fiber-server/docs"
 	"github.com/Neel-shetty/go-fiber-server/handlers"
 	"github.com/Neel-shetty/go-fiber-server/initializers"
 	"github.com/Neel-shetty/go-fiber-server/middlerwares"
 
-	// "github.com/gofiber/contrib/swagger"
+	"github.com/gofiber/contrib/swagger"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func init() {
@@ -20,19 +22,36 @@ func init() {
 	initializers.ConnectDB(&config)
 }
 
+// @title cynergy
+// @version		1.0
+// @description	This is a simple rest server with user auth
+// @contact.name	Neel Narayan Shetty
+// @contact.email	neelnarayanshetty@protonmail.com
+// @license.name	GPLv3
+// @license.url	https://www.gnu.org/licenses/gpl-3.0.en.html
+// @host			localhost:3000
+// @BasePath		/
 func main() {
 	// Initialize a new Fiber app
 	app := fiber.New(fiber.Config{
 		AppName: "Go Fiber Server",
 	})
+	app.Use(logger.New())
 
 	config, err := initializers.LoadConfig(".")
 	if err != nil {
 		log.Fatal("Failed to load environment variables! \n", err.Error())
 	}
 	encryptKey := config.CookieSecret
+	cfg := swagger.Config{
+		BasePath: "/",
+		FilePath: "./docs/swagger.json",
+		Path:     "swagger",
+		Title:    "Cynergy api",
+		CacheAge: 60,
+	}
+	app.Use(swagger.New(cfg))
 	app.Use(encryptcookie.New(encryptcookie.Config{Key: encryptKey}))
-	// app.Use(swagger.New())
 
 	// unauthorized routes
 	app.Post("/user", handlers.CreateUser)

@@ -11,6 +11,26 @@ import (
 	"gorm.io/gorm"
 )
 
+// @Schema
+type HTTPError struct {
+	// The HTTP status code of the error
+	Status int `json:"status"`
+	// The error message
+	Message string `json:"message"`
+}
+
+// CreateUser godoc
+// @Summary Create a new user
+// @Description Create a new user with the provided details
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param user body models.CreateUserSchema true "User details"
+// @Success 201 {object} models.User
+// @Failure 400 {object} HTTPError
+// @Failure 409 {object} HTTPError "A user with this email already exists"
+// @Failure 500 {object} HTTPError
+// @Router /user [post]
 func CreateUser(c *fiber.Ctx) error {
 	user := new(models.CreateUserSchema)
 

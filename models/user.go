@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// @Schema
 type User struct {
 	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key" json:"id,omitempty"`
 	Name        string    `gorm:"varchar(255);not null" json:"name"`

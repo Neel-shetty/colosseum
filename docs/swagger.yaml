@@ -1,0 +1,93 @@
+basePath: /
+definitions:
+  handlers.HTTPError:
+    properties:
+      message:
+        description: The error message
+        type: string
+      status:
+        description: The HTTP status code of the error
+        type: integer
+    type: object
+  models.CreateUserSchema:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      phoneNumber:
+        minimum: 10
+        type: integer
+    required:
+    - email
+    - name
+    - password
+    - phoneNumber
+    type: object
+  models.User:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      phoneNumber:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: neelnarayanshetty@protonmail.com
+    name: Neel Narayan Shetty
+  description: This is a simple rest server with user auth
+  license:
+    name: GPLv3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  title: cynergy
+  version: "1.0"
+paths:
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with the provided details
+      parameters:
+      - description: User details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateUserSchema'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "409":
+          description: A user with this email already exists
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.HTTPError'
+      summary: Create a new user
+      tags:
+      - User
+swagger: "2.0"
