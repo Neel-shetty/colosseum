@@ -24,7 +24,7 @@ func Login(c *fiber.Ctx) error {
 	result := initializers.DB.Select("password").First(&user, "email = ?", payload.Email)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "email is wrong"})
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "fail", "message": "email or password is wrong"})
 		}
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": result.Error.Error()})
 	}

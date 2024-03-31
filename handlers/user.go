@@ -43,14 +43,14 @@ func CreateUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": result.Error.Error()})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "user": newUser})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "user has been created"})
 }
 
 func GetUser(c *fiber.Ctx) error {
 	userId := c.Query("id")
 
-	var user models.User
-	result := initializers.DB.First(&user, "id = ?", userId)
+	var user models.GetUserSchema
+	result := initializers.DB.Table("users").First(&user, "id = ?", userId)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "User not found"})
@@ -121,5 +121,5 @@ func UpdateUser(c *fiber.Ctx) error {
 	updates["updated_at"] = time.Now()
 	initializers.DB.Model(&user).Updates(updates)
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "user": user})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "user has been updated"})
 }

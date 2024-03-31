@@ -30,6 +30,13 @@ type UpdateUserSchema struct {
 	PhoneNumber int    `json:"phoneNumber,omitempty"`
 }
 
+type GetUserSchema struct {
+	Name        string    `json:"name" validate:"required"`
+	Email       string    `json:"email" validate:"email,required"`
+	PhoneNumber int       `json:"phoneNumber" validate:"required,min=10"`
+	CreatedAt   time.Time `json:"createdAt"`
+}
+
 type LoginUserSchema struct {
 	Email    string `json:"email" validate:"email,required"`
 	Password string `json:"password" validate:"required"`
