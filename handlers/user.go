@@ -47,7 +47,7 @@ func CreateUser(c *fiber.Ctx) error {
 }
 
 func GetUser(c *fiber.Ctx) error {
-	userId := c.Query("id")
+	userId := c.Locals("userId")
 
 	var user models.GetUserSchema
 	result := initializers.DB.Table("users").First(&user, "id = ?", userId)
@@ -64,7 +64,7 @@ func GetUser(c *fiber.Ctx) error {
 }
 
 func DeleteUser(c *fiber.Ctx) error {
-	userId := c.Query("id")
+	userId := c.Locals("userId")
 	result := initializers.DB.Delete(models.User{}, "id = ?", userId)
 
 	if result.RowsAffected == 0 {
@@ -77,7 +77,7 @@ func DeleteUser(c *fiber.Ctx) error {
 }
 
 func UpdateUser(c *fiber.Ctx) error {
-	userId := c.Query("id")
+	userId := c.Locals("userId")
 
 	payload := new(models.UpdateUserSchema)
 	if err := c.BodyParser(payload); err != nil {

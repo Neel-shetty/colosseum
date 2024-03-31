@@ -10,8 +10,9 @@ type Config struct {
 	DBUserPassword string `mapstructure:"POSTGRES_PASSWORD"`
 	DBName         string `mapstructure:"POSTGRES_DB"`
 	DBPort         string `mapstructure:"POSTGRES_PORT"`
-
-	ClientOrigin string `mapstructure:"CLIENT_ORIGIN"`
+	ClientOrigin   string `mapstructure:"CLIENT_ORIGIN"`
+	JwtSecret      string `mapstructure:"JWT_SECRET"`
+	CookieSecret   string `mapstructure:"COOKIE_ENCRYPT_SECRET"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
