@@ -8,8 +8,8 @@ import (
 
 type User struct {
 	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key" json:"id,omitempty"`
-	Name        string    `gorm:"varchar(255);not null;index" json:"name"`
-	Email       string    `gorm:"not null;unique" json:"email"`
+	Name        string    `gorm:"varchar(255);not null" json:"name"`
+	Email       string    `gorm:"not null;unique;index:" json:"email"`
 	Password    string    `gorm:"not null" json:"password"`
 	PhoneNumber int       `gorm:"not null" json:"phoneNumber"`
 	CreatedAt   time.Time `gorm:"not null" json:"createdAt,omitempty"`
@@ -19,8 +19,8 @@ type User struct {
 type CreateUserSchema struct {
 	Name        string `json:"name" validate:"required"`
 	Email       string `json:"email" validate:"email,required"`
-	Password    string `json:"password" validate:"required,min=10"`
-	PhoneNumber int    `json:"phoneNumber" validate:"required"`
+	Password    string `json:"password" validate:"required,min=8"`
+	PhoneNumber int    `json:"phoneNumber" validate:"required,min=10"`
 }
 
 type UpdateUserSchema struct {
@@ -28,6 +28,11 @@ type UpdateUserSchema struct {
 	Email       string `json:"email,omitempty"`
 	Password    string `json:"password,omitempty"`
 	PhoneNumber int    `json:"phoneNumber,omitempty"`
+}
+
+type LoginUserSchema struct {
+	Email    string `json:"email" validate:"email,required"`
+	Password string `json:"password" validate:"required"`
 }
 
 type ErrorResponse struct {

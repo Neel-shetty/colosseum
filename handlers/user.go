@@ -6,6 +6,7 @@ import (
 
 	"github.com/Neel-shetty/go-fiber-server/initializers"
 	"github.com/Neel-shetty/go-fiber-server/models"
+	"github.com/Neel-shetty/go-fiber-server/utils"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -22,10 +23,15 @@ func CreateUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(errors)
 	}
 
+	hashedPassword, err := utils.HashPassword(user.Password)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "failed hashing password"})
+	}
+
 	newUser := models.User{
 		Name:        user.Name,
 		Email:       user.Email,
-		Password:    user.Password,
+		Password:    hashedPassword,
 		PhoneNumber: user.PhoneNumber,
 	}
 
@@ -41,9 +47,6 @@ func CreateUser(c *fiber.Ctx) error {
 }
 
 func GetUser(c *fiber.Ctx) error {
-	// if !c.QueryBool("id") {
-	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "user ID not provided"})
-	// }
 	userId := c.Query("id")
 
 	var user models.User
@@ -109,7 +112,11 @@ func UpdateUser(c *fiber.Ctx) error {
 		updates["email"] = payload.Email
 	}
 	if payload.Password != "" {
-		updates["password"] = payload.Password
+		hashedPassword, err := utils.HashPassword(payload.Password)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "failed hashing password"})
+		}
+		updates["password"] = hashedPassword
 	}
 	updates["updated_at"] = time.Now()
 	initializers.DB.Model(&user).Updates(updates)

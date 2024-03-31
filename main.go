@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Neel-shetty/go-fiber-server/handlers"
 	"github.com/Neel-shetty/go-fiber-server/initializers"
+	// "github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"log"
 )
@@ -21,12 +22,15 @@ func main() {
 		AppName: "Go Fiber Server",
 	})
 
+	// app.Use(swagger.New())
+
 	// Define a route for the GET method on the root path '/'
 	app.Get("/user", handlers.GetUser)
 	app.Post("/user", handlers.CreateUser)
 	app.Patch("/user", handlers.UpdateUser)
 	app.Delete("/user", handlers.DeleteUser)
+	app.Post("/login", handlers.Login)
 
 	// Start the server on port 3000
-	log.Fatal(app.Listen(":3000"))
+	app.Listen(":3000")
 }
