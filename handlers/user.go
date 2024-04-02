@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -68,6 +69,11 @@ func CreateUser(c *fiber.Ctx) error {
 
 func GetUser(c *fiber.Ctx) error {
 	userId := c.Locals("userId")
+	userPersonalBests, err := MTPersonalBests(c)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": "internal server error"})
+	}
+	fmt.Println(userPersonalBests.Data["15"])
 
 	var user models.GetUserSchema
 	result := initializers.DB.Table("users").First(&user, "id = ?", userId)

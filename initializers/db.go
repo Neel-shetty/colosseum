@@ -29,6 +29,7 @@ func ConnectDB(config *Config) {
 
 	log.Println("Running Migrations")
 	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.Score{})
 
 	log.Println("🚀 Connected Successfully to the Database")
 }
