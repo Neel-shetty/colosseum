@@ -22,7 +22,7 @@ type Score struct {
 	Type      ScoreType
 }
 
-type Response struct {
+type MTPersonalBestResponse struct {
 	Message string                       `json:"message"`
 	Data    map[string][]MTPersonalBests `json:"data"`
 }
@@ -38,6 +38,37 @@ type MTPersonalBests struct {
 	WordsPerMin float64 `json:"wpm"`
 	Timestamp   int64   `json:"timestamp"`
 	Numbers     bool    `json:"numbers,omitempty"`
+}
+
+type MTLastResultResponse struct {
+	Message string `json:"message"`
+	Data    struct {
+		ID             string  `json:"_id"`
+		WPM            float64 `json:"wpm"`
+		RawWPM         float64 `json:"rawWpm"`
+		CharStats      []int   `json:"charStats"`
+		Accuracy       float64 `json:"acc"`
+		Mode           string  `json:"mode"`
+		Mode2          string  `json:"mode2"`
+		Timestamp      int64   `json:"timestamp"`
+		TestDuration   float64 `json:"testDuration"`
+		Consistency    float64 `json:"consistency"`
+		KeyConsistency float64 `json:"keyConsistency"`
+		ChartData      struct {
+			WPM []int `json:"wpm"`
+			Raw []int `json:"raw"`
+			Err []int `json:"err"`
+		} `json:"chartData"`
+		KeySpacingStats struct {
+			Average float64 `json:"average"`
+			SD      float64 `json:"sd"`
+		} `json:"keySpacingStats"`
+		KeyDurationStats struct {
+			Average float64 `json:"average"`
+			SD      float64 `json:"sd"`
+		} `json:"keyDurationStats"`
+		Name string `json:"name"`
+	} `json:"data"`
 }
 
 type MTLeaderBoard struct {

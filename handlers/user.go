@@ -69,11 +69,12 @@ func CreateUser(c *fiber.Ctx) error {
 
 func GetUser(c *fiber.Ctx) error {
 	userId := c.Locals("userId")
-	userPersonalBests, err := MTPersonalBests(c)
+	userPersonalBests, err := MTLastResult("NjYwYTc1MWRhODM0MzBhYTFhYjlmOTcwLnZoWnpxMUdPX1pxZG1tZTEwTnJfbzF3b3Y5bWRRd0dh")
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": "internal server error"})
 	}
-	fmt.Println(userPersonalBests.Data["15"])
+	// fmt.Println(time.Unix(userPersonalBests.Data.Timestamp/1000, 0).Date())
+	// fmt.Println(time.Now().Date())
 
 	var user models.GetUserSchema
 	result := initializers.DB.Table("users").First(&user, "id = ?", userId)
