@@ -21,6 +21,7 @@ type User struct {
 	ProfilePic       sql.NullString `json:"profilPic"`
 	Ban              bool           `gorm:"default:0" json:"ban"`
 	MonkeyTypeApiKey sql.NullString `json:"monkeyTypeApiKey"`
+	MonkeyTypeScore  int            `gorm:"not null;default:0" json:"monkeyTypeScore"`
 }
 
 type CreateUserSchema struct {

@@ -64,6 +64,8 @@ func main() {
 	app.Patch("/user", handlers.UpdateUser)
 	app.Delete("/user", handlers.DeleteUser)
 	app.Post("/logout", handlers.Logout)
+	app.Post("/mt-personal-best", handlers.PostMTPersonalBests)
+	app.Get("/mt-personal-best", handlers.GetMTPersonalBests)
 
 	// Start the server on port 3000
 	app.Listen(":3000")

@@ -22,6 +22,38 @@ type Score struct {
 	Type      ScoreType
 }
 
+//	type MonkeyTypeScores struct {
+//		ID        int       `gorm:"not null;autoIncrement;primary_key" json:"id"`
+//		UserID    uuid.UUID `gorm:"foreignKey:UserID,references:User(ID)"`
+//		Score     int
+//		CreatedAt time.Time
+//		Type      ScoreType
+//		Wpm15     float64
+//		Acc15     float64
+//		Wpm30     float64
+//		Acc30     float64
+//		Wpm60     float64
+//		Acc60     float64
+//		Wpm120    float64
+//		Acc120    float64
+//	}
+
+type MonkeyTypeStats struct {
+	ID        int       `gorm:"not null;autoIncrement;primaryKey" json:"id"`
+	UserID    uuid.UUID `gorm:"foreignKey:UserID;references:User(ID)" json:"userId"`
+	Score     int       `json:"score"`
+	CreatedAt time.Time `json:"createdAt"`
+	// Type      ScoreType `json:"type"`
+	Wpm15  float64 `json:"wpm15"`
+	Acc15  float64 `json:"acc15"`
+	Wpm30  float64 `json:"wpm30"`
+	Acc30  float64 `json:"acc30"`
+	Wpm60  float64 `json:"wpm60"`
+	Acc60  float64 `json:"acc60"`
+	Wpm120 float64 `json:"wpm120"`
+	Acc120 float64 `json:"acc120"`
+}
+
 type MTPersonalBestResponse struct {
 	Message string                       `json:"message"`
 	Data    map[string][]MTPersonalBests `json:"data"`
