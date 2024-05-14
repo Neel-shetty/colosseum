@@ -33,6 +33,7 @@ func init() {
 // @BasePath		/
 func main() {
 	// Initialize a new Fiber app
+	// nice
 	app := fiber.New(fiber.Config{
 		AppName: "Go Fiber Server",
 	})
