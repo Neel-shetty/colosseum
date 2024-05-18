@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database service
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    networks:
+      - backend-network
+
+  # Go application service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    container_name: go-backend-dev
+    volumes:
+      - .:/app
+      - /app/tmp # Ensure temporary files created by `air` are stored inside the container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: myuser
+      DB_PASSWORD: mypassword
+      DB_NAME: mydatabase
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
