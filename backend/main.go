@@ -12,6 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+  "github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func init() {
@@ -38,6 +39,7 @@ func main() {
 		AppName: "Go Fiber Server",
 	})
 	app.Use(logger.New())
+	app.Use(cors.New())
 
 	config, err := initializers.LoadConfig(".")
 	if err != nil {
