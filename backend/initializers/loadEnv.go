@@ -18,37 +18,7 @@ type Config struct {
 	CookieSecret   string `mapstructure:"COOKIE_ENCRYPT_SECRET"`
 }
 
-// func LoadConfig(path string) (config Config, err error) {
-// 	viper.AddConfigPath(path)
-// 	viper.SetConfigType("env")
-// 	viper.SetConfigName("app")
-
-// 	viper.AutomaticEnv()
-
-// 	err = viper.ReadInConfig()
-// 	if err != nil {
-// 		return
-// 	}
-
-// 	err = viper.Unmarshal(&config)
-// 	return
-// }
-
 func LoadConfig(path string) (config Config, err error) {
-	// viper.AddConfigPath(path)
-	// viper.SetConfigType("env")
-	// viper.SetConfigName("app")
-
-	// Automatically read environment variables
-	// viper.AutomaticEnv()
-
-	// Optionally, set a prefix for environment variables
-	// viper.SetEnvPrefix("MYAPP")
-
-	// Read the config file
-	// if err := viper.ReadInConfig(); err != nil {
-	// 	fmt.Printf("Error reading config file: %s\n", err)
-	// }
 
 	if os.Getenv("POSTGRES_HOST") != "" {
 		config = Config{
