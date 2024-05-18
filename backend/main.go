@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 
 	_ "github.com/Neel-shetty/go-fiber-server/docs"
 	"github.com/Neel-shetty/go-fiber-server/handlers"
@@ -19,6 +20,7 @@ import (
 
 func init() {
 	config, err := initializers.LoadConfig(".")
+	fmt.Println(config)
 	if err != nil {
 		log.Fatalln("Failed to load environment variables! \n", err.Error())
 	}
