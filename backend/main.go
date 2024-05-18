@@ -1,18 +1,20 @@
 package main
 
 import (
+
 	_ "github.com/Neel-shetty/go-fiber-server/docs"
 	"github.com/Neel-shetty/go-fiber-server/handlers"
 	"github.com/Neel-shetty/go-fiber-server/initializers"
 	"github.com/Neel-shetty/go-fiber-server/middlerwares"
 
-	"github.com/gofiber/contrib/swagger"
 	"log"
 
+	"github.com/gofiber/contrib/swagger"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-  "github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func init() {
