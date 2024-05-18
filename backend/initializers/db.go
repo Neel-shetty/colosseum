@@ -37,7 +37,8 @@ func ConnectDB(config *Config) {
 	log.Println("Running Migrations")
 	DB.AutoMigrate(&models.User{})
 	DB.AutoMigrate(&models.Score{})
-	DB.AutoMigrate(&models.MonkeyTypeStats{})
+	DB.AutoMigrate(&models.MTPersonalBestsDB{})
+
 
 	log.Println("🚀 Connected Successfully to the Database")
 }

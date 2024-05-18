@@ -63,7 +63,6 @@ func main() {
 	// unauthorized routes
 	app.Post("/user", handlers.CreateUser)
 	app.Post("/login", handlers.Login)
-	// app.Post("/personalBest", handlers.MTPersonalBests)
 
 	app.Use(middlerwares.AuthMiddleware)
 	// authorized routes

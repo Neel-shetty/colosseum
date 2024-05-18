@@ -3,19 +3,21 @@ package functions
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	// "time"
 
 	"github.com/Neel-shetty/go-fiber-server/initializers"
 	"github.com/Neel-shetty/go-fiber-server/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
-func InsertPersonalBestsIntoDb(personalBests models.MTPersonalBestResponse) error {
+func InsertPersonalBestsIntoDb(personalBests models.MTPersonalBestResponse, uid uuid.UUID) error {
 	for interval, pbList := range personalBests.Data {
 		for _, pb := range pbList {
 			// Insert each personal best record into the database
-			err := InsertPersonalBestRecord(pb, interval)
+			err := InsertPersonalBestRecord(pb, interval, uid)
 			if err != nil {
 				return err
 			}
@@ -24,8 +26,8 @@ func InsertPersonalBestsIntoDb(personalBests models.MTPersonalBestResponse) erro
 	return nil
 }
 
-func InsertPersonalBestRecord(pb models.MTPersonalBests, interval string) error {
-	pbModel := models.MTPersonalBests{
+func InsertPersonalBestRecord(pb models.MTPersonalBests, interval string, uid uuid.UUID) error {
+	pbModel := models.MTPersonalBestsDB{
 		Accuracy:    pb.Accuracy,
 		Consistency: pb.Consistency,
 		Difficulty:  pb.Difficulty,
@@ -34,9 +36,9 @@ func InsertPersonalBestRecord(pb models.MTPersonalBests, interval string) error 
 		Punctuation: pb.Punctuation,
 		Raw:         pb.Raw,
 		WordsPerMin: pb.WordsPerMin,
-		// Timestamp:   time.Unix(0, pb.Timestamp*time.Millisecond),
+		Timestamp:   convertUnixMillisecondsToTime(pb.Timestamp),
 		Numbers: pb.Numbers,
-		// Timestamp: time.Now(),
+		UserID: uid,
 	}
 
 	result := initializers.DB.Create(&pbModel)
@@ -67,6 +69,15 @@ func GetMTPersonalBestsFromApi(apeKey string) (models.MTPersonalBestResponse, er
 	return personalBests, nil
 }
 
+func GetMTPersonalBestsFromDb(uid uuid.UUID) ([]models.MTPersonalBestsDB, error) {
+	var personalBests []models.MTPersonalBestsDB
+	result := initializers.DB.Where("user_id = ?", uid).Find(&personalBests)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return personalBests, nil
+}
+
 func GetMTLastResult(apeKey string) (models.MTLastResultResponse, error) {
 	agent := fiber.Get("https://api.monkeytype.com/results/last")
 	apiKey := fmt.Sprintf("ApeKey %s", apeKey)
@@ -89,4 +100,19 @@ func GetMTLastResult(apeKey string) (models.MTLastResultResponse, error) {
 	// fmt.Println(time.Now().Date())
 
 	return personalBests, nil
+}
+
+
+
+func convertUnixMillisecondsToTime(ms int64) time.Time {
+	// Your Unix timestamp in milliseconds
+	timestamp := int64(ms)
+
+	// Convert milliseconds to seconds and nanoseconds
+	seconds := timestamp / 1000
+	nanoseconds := (timestamp % 1000) * 1000000
+
+	// Create a time.Time object
+	t := time.Unix(seconds, nanoseconds)
+	return t
 }
