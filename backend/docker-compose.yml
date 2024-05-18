@@ -11,8 +11,10 @@ services:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
+    networks:
+      - backend-network
 
-  #Go application service
+  # Go application service
   app:
     build:
       context: .
@@ -26,6 +28,12 @@ services:
       # Adjust these environment variables as needed
       DB_HOST: postgres
       DB_PORT: "5432"
-      DB_USER: myuserd
+      DB_USER: myuser
       DB_PASSWORD: mypassword
       DB_NAME: mydatabase
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
