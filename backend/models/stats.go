@@ -72,6 +72,21 @@ type MTPersonalBests struct {
 	Numbers     bool    `json:"numbers,omitempty"`
 }
 
+type MTPersonalBestsDB struct {
+	Accuracy    float64 `json:"acc"`
+	Consistency float64 `json:"consistency"`
+	Difficulty  string  `json:"difficulty"`
+	LazyMode    bool    `json:"lazyMode"`
+	Language    string  `json:"language"`
+	Punctuation bool    `json:"punctuation"`
+	Raw         float64 `json:"raw"`
+	WordsPerMin float64 `json:"wpm"`
+	Timestamp   time.Time   `json:"timestamp"`
+	Numbers     bool    `json:"numbers,omitempty"`
+	UserID      uuid.UUID `gorm:"type:uuid;not null" json:"userId"` // Foreign key to User table
+	User        User      `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // GORM association
+}
+
 type MTLastResultResponse struct {
 	Message string `json:"message"`
 	Data    struct {

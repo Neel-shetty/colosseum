@@ -35,7 +35,7 @@ func Login(c *fiber.Ctx) error {
 
 	passwordCorrect := utils.CheckPasswordHash(payload.Password, user.Password)
 
-	if passwordCorrect == false {
+	if !passwordCorrect{
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "email or password is wrong"})
 	} else {
 		config, err := initializers.LoadConfig(".")

@@ -14,6 +14,7 @@ import (
 var DB *gorm.DB
 
 func ConnectDB(config *Config) {
+	fmt.Printf("DB Host: %s\n", config)
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Kolkata", config.DBHost, config.DBUserName, config.DBUserPassword, config.DBName, config.DBPort)
 
 	var err error
@@ -30,7 +31,8 @@ func ConnectDB(config *Config) {
 	log.Println("Running Migrations")
 	DB.AutoMigrate(&models.User{})
 	DB.AutoMigrate(&models.Score{})
-	DB.AutoMigrate(&models.MonkeyTypeStats{})
+	DB.AutoMigrate(&models.MTPersonalBestsDB{})
+
 
 	log.Println("🚀 Connected Successfully to the Database")
 }
