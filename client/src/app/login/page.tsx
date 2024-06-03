@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,11 +15,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const router=useRouter();
+  
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
@@ -45,6 +49,7 @@ export default function Login() {
       const result = await response.json();
       console.log(result);
       setMessage(result.message || "Login successful");
+      router.push("/pages/leaderboard");
     } catch (error) {
       console.log(error);
       setMessage(error?.message);

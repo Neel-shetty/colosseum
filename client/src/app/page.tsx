@@ -1,7 +1,11 @@
 import Link from "next/link";
-import Login from "./pages/login/page";
+import Login from "./login/page";
 export default function Home() {
   return (
-   <Login/>
+    <>
+    <Login/>
+   <Link href="./pages/leaderboard">go to leaderboard</Link>
+    </>
+   
   );
 }
