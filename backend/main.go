@@ -5,6 +5,7 @@ import (
 
 	_ "github.com/Neel-shetty/go-fiber-server/docs"
 	"github.com/Neel-shetty/go-fiber-server/handlers"
+	"github.com/Neel-shetty/go-fiber-server/handlers/functions"
 	"github.com/Neel-shetty/go-fiber-server/initializers"
 	"github.com/Neel-shetty/go-fiber-server/middlerwares"
 
@@ -25,6 +26,7 @@ func init() {
 		log.Fatalln("Failed to load environment variables! \n", err.Error())
 	}
 	initializers.ConnectDB(&config)
+	initializers.InitGraphql()
 }
 
 // @title cynergy
@@ -63,6 +65,8 @@ func main() {
 	// unauthorized routes
 	app.Post("/user", handlers.CreateUser)
 	app.Post("/login", handlers.Login)
+  // app.Get("/streak/:username", functions.GetUserStreak)
+  app.Get("/streak/:username", functions.FetchStats)
 
 	app.Use(middlerwares.AuthMiddleware)
 	// authorized routes
