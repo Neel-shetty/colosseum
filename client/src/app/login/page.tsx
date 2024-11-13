@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, use } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../authcontext";
+
 
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +24,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const router=useRouter();
+  const {login}=useAuth();
   
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -31,9 +34,9 @@ export default function Login() {
     const data = { email, password };
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch("http://localhost:3000/login" ,{
       method: "POST",
-
+      credentials: "include",
       headers: {
           "Content-Type": "application/json",
         },
@@ -48,7 +51,10 @@ export default function Login() {
 
       const result = await response.json();
       console.log(result);
+      
+      
       setMessage(result.message || "Login successful");
+      login();
       router.push("/pages/leaderboard");
     } catch (error) {
       console.log(error);

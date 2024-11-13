@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Protectedroutes from "@/app/protectedroutes";
 import {
   faMagnifyingGlass,
   faGlobe,
@@ -72,10 +73,27 @@ const tabledata = [
     UserName: "",
     points: "",
   },
+  {
+    rank: "12",
+    UserName: "",
+    points: "",
+  },
+  {
+    rank: "13",
+    UserName: "",
+    points: "",
+  },
+  {
+    rank: "14",
+    UserName: "",
+    points: "",
+  },
 ];
 
 export default function Leaderboard() {
   return (
+    <Protectedroutes>
+    
     <div className="flex flex-col items-center bg-bg-color pt-20 space-y-6 w-full">
       <div className="flex space-x-3 w-4/5 max-w-3xl">
         <form action="" className="flex-grow">
@@ -135,5 +153,6 @@ export default function Leaderboard() {
         </div>
       </div>
     </div>
+    </Protectedroutes>
   );
 }
