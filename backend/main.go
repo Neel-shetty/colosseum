@@ -65,8 +65,9 @@ func main() {
 	// unauthorized routes
 	app.Post("/user", handlers.CreateUser)
 	app.Post("/login", handlers.Login)
-  // app.Get("/streak/:username", functions.GetUserStreak)
-  app.Get("/streak/:username", functions.FetchStats)
+	// app.Get("/streak/:username", functions.GetUserStreak)
+	app.Get("/streak/:username", functions.FetchStats)
+	app.Get("/leaderboard", handlers.Leaderboard)
 
 	app.Use(middlerwares.AuthMiddleware)
 	// authorized routes
