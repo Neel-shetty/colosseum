@@ -69,7 +69,7 @@ func GetMTPersonalBestsFromApi(apeKey string) (models.MTPersonalBestResponse, er
 	agent := fiber.Get("https://api.monkeytype.com/users/personalBests")
 	apiKey := fmt.Sprintf("ApeKey %s", apeKey)
 	fmt.Println(apiKey)
-	agent.Set("Authorization", "ApeKey NjczMzdkZjNjYjg3OTE3ZGYyNDMxYTE4LnZfSG45VTZET1BLYUV0ZW5jWmRqYWU4QXRGSnJoUkVk")
+	agent.Set("Authorization", apiKey)
 	agent.QueryString("mode=time")
 	// agent.Debug()
 	statusCode, body, errs := agent.Bytes()

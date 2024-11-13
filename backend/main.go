@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	_ "github.com/Neel-shetty/go-fiber-server/docs"
 	"github.com/Neel-shetty/go-fiber-server/handlers"
 	"github.com/Neel-shetty/go-fiber-server/handlers/functions"
 	"github.com/Neel-shetty/go-fiber-server/initializers"
 	"github.com/Neel-shetty/go-fiber-server/middlerwares"
+	"github.com/Neel-shetty/go-fiber-server/routines"
 
 	"log"
 
@@ -46,10 +48,10 @@ func main() {
 	})
 	app.Use(logger.New())
 	app.Use(cors.New((cors.Config{
-		AllowOrigins: "http://localhost:3001", 
-		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
-		AllowMethods: "GET, POST, PATCH, DELETE",
-		AllowCredentials: true, 
+		AllowOrigins:     "http://localhost:3001",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowMethods:     "GET, POST, PATCH, DELETE",
+		AllowCredentials: true,
 	})))
 
 	config, err := initializers.LoadConfig(".")
@@ -82,6 +84,9 @@ func main() {
 	app.Post("/logout", handlers.Logout)
 	app.Post("/mt-personal-best", handlers.PostMTPersonalBests)
 	app.Get("/mt-personal-best", handlers.GetMTPersonalBests)
+
+	// cron jobs
+	go routines.PollMTPersonalBests(1 * time.Hour)
 
 	// Start the server on port 3000
 	app.Listen(":3000")
