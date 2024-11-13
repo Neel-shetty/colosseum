@@ -45,7 +45,12 @@ func main() {
 		AppName: "Go Fiber Server",
 	})
 	app.Use(logger.New())
-	app.Use(cors.New())
+	app.Use(cors.New((cors.Config{
+		AllowOrigins: "http://localhost:3001", 
+		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+		AllowMethods: "GET, POST, PATCH, DELETE",
+		AllowCredentials: true, 
+	})))
 
 	config, err := initializers.LoadConfig(".")
 	if err != nil {

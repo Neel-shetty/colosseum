@@ -1,15 +1,18 @@
 import React from 'react'
 import Link from 'next/link';
+import { useAuth } from '../authcontext';
+
 
 export default function PageLayout({
     children,
   }:    {
     children: React.ReactNode;
   }) {
+    
     return (
     <>
         <div className='bg-bg-color flex justify-center items-center '>
-        <nav className="bg-zinc-800 p-3 w-11/12
+          <nav className="bg-zinc-800 p-3 w-11/12
          mt-2  rounded-lg ">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-lg font-bold">
@@ -20,14 +23,16 @@ export default function PageLayout({
           <Link href="/" className="">
             Activities
           </Link>
-          <Link href="/">Leaderboard</Link>
+          <Link href="/pages/leaderboard">Leaderboard</Link>
           <Link href="/">Community</Link>
           <Link href="/">Projects</Link>
-          <Link href="/">Profile</Link>
+          <Link href="/pages/profile">Profile</Link>
         </div>
       </div>
     </nav>
+    
     </div>
+        
     
     <div >
         {children}

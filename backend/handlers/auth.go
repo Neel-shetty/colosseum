@@ -13,6 +13,7 @@ import (
 )
 
 func Login(c *fiber.Ctx) error {
+	
 	payload := new(models.LoginUserSchema)
 
 	if err := c.BodyParser(payload); err != nil {
@@ -55,13 +56,15 @@ func Login(c *fiber.Ctx) error {
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": "Error creating token"})
 		}
-		c.Cookie(&fiber.Cookie{Name: "accessToken", Expires: expirationTime, Value: token, HTTPOnly: true, SameSite: "Strict", Secure: true})
+		c.Cookie(&fiber.Cookie{Name: "accessToken", Expires: expirationTime, Value: token, HTTPOnly: true, SameSite: "Strict",Secure: true})
 	}
+	
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "logged in"})
 }
 
 func Logout(c *fiber.Ctx) error {
-	c.Cookie(&fiber.Cookie{Name: "accessToken", Value: "", HTTPOnly: true, Expires: time.Now().Add(-time.Hour), SameSite: "Strict", Secure: true})
+	
+	c.Cookie(&fiber.Cookie{Name: "accessToken", Value: "", HTTPOnly: true, Expires: time.Now().Add(-time.Hour), SameSite: "Strict",Secure: true})
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "User logged out"})
 }
