@@ -7,7 +7,7 @@ import (
 )
 
 func PostMTPersonalBests(c *fiber.Ctx) error {
-	personalBests, err := functions.GetMTPersonalBestsFromApi("nice")
+	personalBests, err := functions.GetMTPersonalBestsFromApi("NjczMzdkZjNjYjg3OTE3ZGYyNDMxYTE4LnZfSG45VTZET1BLYUV0ZW5jWmRqYWU4QXRGSnJoUkVk")
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"": ""})
 	}

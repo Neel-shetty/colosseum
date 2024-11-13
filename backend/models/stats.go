@@ -73,18 +73,33 @@ type MTPersonalBests struct {
 }
 
 type MTPersonalBestsDB struct {
-	Accuracy    float64 `json:"acc"`
-	Consistency float64 `json:"consistency"`
-	Difficulty  string  `json:"difficulty"`
-	LazyMode    bool    `json:"lazyMode"`
-	Language    string  `json:"language"`
-	Punctuation bool    `json:"punctuation"`
-	Raw         float64 `json:"raw"`
-	WordsPerMin float64 `json:"wpm"`
-	Timestamp   time.Time   `json:"timestamp"`
-	Numbers     bool    `json:"numbers,omitempty"`
-	UserID      uuid.UUID `gorm:"type:uuid;not null" json:"userId"` // Foreign key to User table
+	Accuracy    float64   `json:"acc"`
+	Consistency float64   `json:"consistency"`
+	Difficulty  string    `json:"difficulty"`
+	LazyMode    bool      `json:"lazyMode"`
+	Language    string    `json:"language"`
+	Punctuation bool      `json:"punctuation"`
+	Raw         float64   `json:"raw"`
+	Hash        string    `gorm:"not null" json:"hash"`
+	WordsPerMin float64   `json:"wpm"`
+	Timestamp   time.Time `json:"timestamp"`
+	Numbers     bool      `json:"numbers,omitempty"`
+	UserID      uuid.UUID `gorm:"type:uuid;not null" json:"userId"`                                 // Foreign key to User table
 	User        User      `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // GORM association
+}
+
+type Leaderboard struct {
+	Accuracy    float64   `json:"acc"`
+	Consistency float64   `json:"consistency"`
+	Difficulty  string    `json:"difficulty"`
+	LazyMode    bool      `json:"lazyMode"`
+	Language    string    `json:"language"`
+	Punctuation bool      `json:"punctuation"`
+	Raw         float64   `json:"raw"`
+	Hash        string    `json:"hash"`
+	WordsPerMin float64   `json:"wpm"`
+	Timestamp   time.Time `json:"timestamp"`
+	UserName    string    `json:"name"`
 }
 
 type MTLastResultResponse struct {
