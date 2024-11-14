@@ -20,7 +20,7 @@ type User struct {
 	UpdatedAt        time.Time      `gorm:"not null" json:"updatedAt,omitempty"`
 	ProfilePic       sql.NullString `json:"profilPic"`
 	Ban              bool           `gorm:"default:0" json:"ban"`
-	MonkeyTypeApiKey sql.NullString `json:"monkeyTypeApiKey"`
+	MonkeyTypeApiKey sql.NullString `gorm:"column:monkey_type_api_key" json:"monkeyTypeApiKey"`
 	MonkeyTypeScore  int            `gorm:"not null;default:0" json:"monkeyTypeScore"`
 }
 
@@ -32,10 +32,11 @@ type CreateUserSchema struct {
 }
 
 type UpdateUserSchema struct {
-	Name        string `json:"name,omitempty"`
-	Email       string `json:"email,omitempty"`
-	Password    string `json:"password,omitempty"`
-	PhoneNumber int    `json:"phoneNumber,omitempty"`
+	Name             string `json:"name,omitempty"`
+	Email            string `json:"email,omitempty"`
+	Password         string `json:"password,omitempty"`
+	PhoneNumber      int    `json:"phoneNumber,omitempty"`
+	MonkeyTypeApiKey string `json:"monkeyTypeApiKey"`
 }
 
 type GetUserSchema struct {
