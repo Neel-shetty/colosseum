@@ -127,6 +127,11 @@ func UpdateUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": err.Error()})
 	}
 
+	// Ensure the column exists before attempting to update
+	if !initializers.DB.Migrator().HasColumn(&models.User{}, "monkey_type_api_key") {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "monkeyTypeApiKey column does not exist"})
+	}
+
 	updates := make(map[string]interface{})
 
 	if payload.Name != "" {
@@ -138,6 +143,9 @@ func UpdateUser(c *fiber.Ctx) error {
 	if payload.Email != "" {
 		updates["email"] = payload.Email
 	}
+	if payload.MonkeyTypeApiKey != "" {
+		updates["monkey_type_api_key"] = payload.MonkeyTypeApiKey
+	}
 	if payload.Password != "" {
 		hashedPassword, err := utils.HashPassword(payload.Password)
 		if err != nil {
@@ -145,6 +153,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		}
 		updates["password"] = hashedPassword
 	}
+
 	updates["updated_at"] = time.Now()
 	initializers.DB.Model(&user).Updates(updates)
 
