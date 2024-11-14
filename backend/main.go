@@ -86,7 +86,7 @@ func main() {
 	app.Get("/mt-personal-best", handlers.GetMTPersonalBests)
 
 	// cron jobs
-	go routines.PollMTPersonalBests(1 * time.Hour)
+	go routines.PollMTPersonalBests(10 * time.Second)
 
 	// Start the server on port 3000
 	app.Listen(":3000")
