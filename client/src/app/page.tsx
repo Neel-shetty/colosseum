@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
     <Login/>
-   <Link href="./pages/leaderboard">go to leaderboard</Link>
+   
    
     </>
    
