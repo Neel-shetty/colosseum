@@ -5,9 +5,11 @@ import { useAuth } from '../authcontext';
 
 export default function PageLayout({
     children,
+    
   }:    {
     children: React.ReactNode;
   }) {
+    
     
     return (
     <>
@@ -19,14 +21,15 @@ export default function PageLayout({
           <img src="" alt="Logo" />
         </div>
         <div className="text-white space-x-4">
-          <Link href="/">Home</Link>
-          <Link href="/" className="">
+          <Link href="#">Home</Link>
+          <Link href="#" className="">
             Activities
           </Link>
           <Link href="/pages/leaderboard">Leaderboard</Link>
-          <Link href="/">Community</Link>
-          <Link href="/">Projects</Link>
+          <Link href="#">Community</Link>
+          <Link href="#">Projects</Link>
           <Link href="/pages/profile">Profile</Link>
+         
         </div>
       </div>
     </nav>

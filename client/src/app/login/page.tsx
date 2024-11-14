@@ -1,11 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, FormEvent, use } from "react";
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../authcontext";
-
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,15 +15,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  const router=useRouter();
-  const {login}=useAuth();
-  
+  const router = useRouter();
+  const { login } = useAuth();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
@@ -34,15 +31,13 @@ export default function Login() {
     const data = { email, password };
 
     try {
-      const response = await fetch("http://localhost:3000/login" ,{
-      method: "POST",
-      credentials: "include",
-      headers: {
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(
-          data
-        ),
+        body: JSON.stringify(data),
       });
 
       if (!response.ok) {
@@ -51,8 +46,7 @@ export default function Login() {
 
       const result = await response.json();
       console.log(result);
-      
-      
+
       setMessage(result.message || "Login successful");
       login();
       router.push("/pages/leaderboard");
@@ -63,14 +57,15 @@ export default function Login() {
       setLoading(false);
     }
   };
+
   return (
-    <div className="flex min-h-screen items-center justify-center p-20 bg-bg-color">
-      <Card className="mx-auto max-w-xl w-full px-16 py-12 bg-zinc-800 shadow-xl shadow-zinc-950 border-none">
+    <div className="flex min-h-screen items-center justify-center p-4 sm:p-10 bg-bg-color">
+      <Card className="w-full max-w-sm sm:max-w-md lg:max-w-xl mx-auto px-6 sm:px-10 py-8 sm:py-12 bg-zinc-800 shadow-xl shadow-zinc-950 border-none">
         <CardHeader>
-          <CardTitle className="text-2xl text-center text-white ">
+          <CardTitle className="text-2xl sm:text-3xl text-center text-white">
             Login
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-center text-gray-400">
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
@@ -90,7 +85,7 @@ export default function Login() {
                 />
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center mt-5">
+                <div className="flex items-center mt-4">
                   <Label htmlFor="password" className="text-white">
                     Password
                   </Label>
@@ -111,7 +106,7 @@ export default function Login() {
               </div>
               <Button
                 type="submit"
-                className="w-full mt-10 bg-zinc-900"
+                className="w-full mt-6 sm:mt-10 bg-zinc-900"
                 disabled={loading}
               >
                 {loading ? "Logging in..." : "Login"}

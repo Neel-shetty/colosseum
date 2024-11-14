@@ -1,30 +1,29 @@
-"use client"
+"use client";
 import { useRouter } from "next/navigation";
-import {useEffect,useState} from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "./authcontext";
+import BeatLoader from "react-spinners/BeatLoader";
 
+export default function Protectedroutes({ children }) {
+  const router = useRouter();
+  const { isLoggedIn } = useAuth();
+  const [loading, setLoading] = useState(true);
 
-export default function Protectedroutes({children}){
-    
-    const router=useRouter();
-    const {isLoggedIn}=useAuth();
-    const[loading,setLoading]=useState(true)
-
-
-    useEffect(()=>{
-        
-        if(!isLoggedIn){
-            router.push("/login")
-
-        }
-        
-        
-
-    },[isLoggedIn,router]);
-    
-    if(!isLoggedIn){
-        return null;
+  useEffect(() => {
+    if (isLoggedIn === false) {
+      router.push("/login");
+    } else if (isLoggedIn === true) {
+      setLoading(false);
     }
-    
-    return children;
+  }, [isLoggedIn, router]);
+
+  if (isLoggedIn === null || loading) {
+    return (
+      <div className="bg-bg-color flex items-center justify-center h-screen text-3xl">
+        <BeatLoader color="#ffffff" />
+      </div>
+    );
+  }
+
+  return children;
 }
