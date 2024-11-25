@@ -10,12 +10,12 @@ export default function Protectedroutes({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isLoggedIn === false) {
+    if (isLoggedIn === false && !loading) {
       router.push("/login");
     } else if (isLoggedIn === true) {
       setLoading(false);
     }
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn, loading,router]);
 
   if (isLoggedIn === null || loading) {
     return (

@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const tabledata = [
+/*const tabledata = [
   { rank: "1", UserName: "neel<developer>", points: "1234" },
   { rank: "2", UserName: "Krupal.404devNotFound", points: "234" },
   { rank: "3", UserName: "test3", points: "34" },
@@ -28,9 +29,29 @@ const tabledata = [
   { rank: "", UserName: "", points: "" },
   { rank: "", UserName: "", points: "" },
   
-];
+];*/
 
 export default function Leaderboard() {
+
+  const [tabledata,settabledata]=useState([]);
+  
+
+  useEffect(()=>{
+   
+    fetch("http://localhost:3000/leaderboard")
+    .then((res)=>res.json())
+    .then((data)=>{
+      console.log(data)
+      settabledata(data.data);
+    })
+    .catch((err)=>{
+      console.log(err.message);
+    });
+  },[]);
+
+ 
+
+
   return (
     <Protectedroutes>
       <div className="flex flex-col items-center bg-bg-color pt-10 space-y-6 w-full">
@@ -75,16 +96,16 @@ export default function Leaderboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {tabledata.map((data) => (
-                  <TableRow key={data.rank}>
+                {tabledata.map((data,index) => (
+                  <TableRow key={index}>
                     <TableCell className="pl-4 sm:pl-10 pr-4 sm:pr-10">
-                      {data.rank}
+                      {index+1||"-"}
                     </TableCell>
                     <TableCell className="text-center whitespace-nowrap">
-                      {data.UserName || "-"}
+                      {data.name || "-"}
                     </TableCell>
                     <TableCell className="text-right pr-4 sm:pr-10">
-                      {data.points || "-"}
+                      {data.wpm || "-"}
                     </TableCell>
                   </TableRow>
                 ))}
