@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
+"use client"
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Protectedroutes from "@/app/protectedroutes";
+import { useRouter } from "next/navigation";
 
 const profile_data = {
   userId: "123",
@@ -23,6 +25,10 @@ const profile_data = {
 };
 
 export default function ProfilePage() {
+  const router=useRouter();
+  const handleClick=()=>{
+    router.push("/pages/editprofile");
+  }
   return (
     <Protectedroutes>
       <div className="flex flex-col items-center bg-bg-color min-h-screen py-10 text-white">
@@ -94,7 +100,16 @@ export default function ProfilePage() {
             <i className="fab fa-facebook hover:text-white text-2xl" />
           </div>
         </Card>
+        <div className="w-full max-w-2xl mt-5 flex justify-end">
+          <button
+            className="bg-zinc-950 text-white px-6 py-2 rounded-md shadow-lg border border-white hover:bg-zinc-700"
+            onClick={handleClick}
+          >
+            Edit Profile
+          </button>
+        </div>
       </div>
+      
     </Protectedroutes>
   );
 }

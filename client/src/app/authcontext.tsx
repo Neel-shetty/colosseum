@@ -25,10 +25,12 @@ interface AuthProviderProps {
   
 
 export const AuthProvider:React.FC<AuthProviderProps>=({children})=>{
-    const [isLoggedIn,setisLoggedIn]=useState<boolean|null>(null);
+    const [isLoggedIn,setisLoggedIn]=useState<boolean|null>(false);
+    const[loading,setLoading]=useState(true);
     
     useEffect(()=>{const authstate=localStorage.getItem("isAuthenticated");
     setisLoggedIn(authstate==="true");
+    setLoading(false);
     },[]);
         
     
