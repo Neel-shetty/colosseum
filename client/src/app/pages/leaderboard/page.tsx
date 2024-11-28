@@ -115,7 +115,7 @@ export default function Leaderboard() {
                 {filteredusers.map((data, index) => (
                   <TableRow key={index}>
                     <TableCell className="pl-4 sm:pl-10 pr-4 sm:pr-10">
-                      {index + 1 || "-"}
+                    {tabledata.findIndex((user) => user.name === data.name) + 1 || "-"}
                     </TableCell>
                     <TableCell
                       className="text-center whitespace-nowrap"
