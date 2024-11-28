@@ -16,10 +16,12 @@ export default function PagesLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <AuthProvider>
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider></body>
+        {children}</body>
       
     </html>
+    </AuthProvider>
   );
 }

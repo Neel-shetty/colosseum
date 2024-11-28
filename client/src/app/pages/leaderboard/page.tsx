@@ -1,6 +1,11 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Protectedroutes from "@/app/protectedroutes";
@@ -17,40 +22,42 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-/*const tabledata = [
-  { rank: "1", UserName: "neel<developer>", points: "1234" },
-  { rank: "2", UserName: "Krupal.404devNotFound", points: "234" },
-  { rank: "3", UserName: "test3", points: "34" },
-  { rank: "", UserName: "", points: "" },
-  { rank: "", UserName: "", points: "" },
-  { rank: "", UserName: "", points: "" },
-  { rank: "", UserName: "", points: "" },
-  { rank: "", UserName: "", points: "" },
-  { rank: "", UserName: "", points: "" },
-  
-];*/
+import { useRouter } from "next/navigation";
 
 export default function Leaderboard() {
+  const [tabledata, settabledata] = useState([]);
+  const [searchItem, setSearchItem] = useState("");
+  const [filteredusers, setFilteredUsers] = useState([]);
 
-  const [tabledata,settabledata]=useState([]);
-  
+  const router = useRouter();
 
-  useEffect(()=>{
-   
+  useEffect(() => {
     fetch("http://localhost:3000/leaderboard")
-    .then((res)=>res.json())
-    .then((data)=>{
-      console.log(data)
-      settabledata(data.data);
-    })
-    .catch((err)=>{
-      console.log(err.message);
-    });
-  },[]);
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        settabledata(data.data);
+        setFilteredUsers(data.data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
 
- 
+  const handleInputChange = (e) => {
+    setSearchItem(e.target.value);
+  };
 
+  useEffect(() => {
+    const filteredItems = tabledata.filter((data) =>
+      data.name.toLowerCase().includes(searchItem.toLowerCase())
+    );
+    setFilteredUsers(filteredItems);
+  }, [searchItem, tabledata]);
+
+  const handleNameClick = (name) => {
+    router.push("/pages/profile");
+  };
 
   return (
     <Protectedroutes>
@@ -65,10 +72,13 @@ export default function Leaderboard() {
               <input
                 type="text"
                 placeholder="Search"
+                value={searchItem}
+                onChange={handleInputChange}
                 className="border border-white bg-zinc-950 rounded w-full text-white p-2 pl-10"
               />
             </div>
           </form>
+          {/*
           <Button
             variant="secondary"
             className="bg-white text-black flex items-center justify-center space-x-2 p-2"
@@ -76,6 +86,7 @@ export default function Leaderboard() {
             <FontAwesomeIcon icon={faGlobe} className="text-black h-5 w-5" />
             <span>Global</span>
           </Button>
+          
           <Button
             variant="default"
             className="bg-zinc-950 border border-white rounded text-white flex items-center justify-center space-x-2 p-2"
@@ -83,6 +94,7 @@ export default function Leaderboard() {
             <FontAwesomeIcon icon={faList} className="text-white h-5 w-5" />
             <span>Categories</span>
           </Button>
+          */}
         </div>
 
         <div className="w-11/12 sm:w-4/5 max-w-3xl pb-10">
@@ -90,23 +102,43 @@ export default function Leaderboard() {
             <Table className="min-w-[320px] w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[80px] pl-4 sm:pl-10 pr-4 sm:pr-10">Rank</TableHead>
+                  <TableHead className="w-[80px] pl-4 sm:pl-10 pr-4 sm:pr-10">
+                    Rank
+                  </TableHead>
                   <TableHead className="text-center">User Name</TableHead>
-                  <TableHead className="text-right pr-4 sm:pr-10">Score</TableHead>
+                  <TableHead className="text-right pr-4 sm:pr-10">
+                    WPM
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {tabledata.map((data,index) => (
+                {filteredusers.map((data, index) => (
                   <TableRow key={index}>
                     <TableCell className="pl-4 sm:pl-10 pr-4 sm:pr-10">
-                      {index+1||"-"}
+                      {index + 1 || "-"}
                     </TableCell>
-                    <TableCell className="text-center whitespace-nowrap">
+                    <TableCell
+                      className="text-center whitespace-nowrap"
+                      onClick={() => handleNameClick(data.name)}
+                      role="button"
+                    >
                       {data.name || "-"}
                     </TableCell>
-                    <TableCell className="text-right pr-4 sm:pr-10">
-                      {data.wpm || "-"}
-                    </TableCell>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TableCell className="text-right pr-4 sm:pr-10">
+                          <TooltipTrigger>{data.wpm || "-"}</TooltipTrigger>
+                          <TooltipContent
+                            side="bottom"
+                            align="center"
+                            className="bg-black border border-black text-white px-3 py-2 "
+                          >
+                            {" "}
+                            {`Accuracy: ${data.acc} %`}
+                          </TooltipContent>
+                        </TableCell>
+                      </Tooltip>
+                    </TooltipProvider>
                   </TableRow>
                 ))}
               </TableBody>
