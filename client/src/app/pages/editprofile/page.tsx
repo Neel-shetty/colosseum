@@ -2,7 +2,7 @@
 import Protectedroutes from "@/app/protectedroutes";
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
 
@@ -10,6 +10,17 @@ export default function Page() {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
 
   const skillsList = ["CyberSecurity", "AI/ML", "Web Dev", "App Dev"];
+  const router=useRouter();
+
+  const handleClick=()=>{
+    
+    router.push("/pages/profile");
+  }
+
+  const handleSave=(e: React.FormEvent)=>{
+    e.preventDefault();
+    router.push("/pages/profile");
+  }
 
   const toggleSkill = (skill: string) => {
     setSelectedSkills((prev) =>
@@ -92,12 +103,14 @@ export default function Page() {
                 <button
                   type="button"
                   className="bg-zinc-700 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+                  onClick={handleClick}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   className="bg-zinc-700 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                  onClick={handleSave}
                 >
                   Save
                 </button>

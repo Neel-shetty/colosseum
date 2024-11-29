@@ -12,12 +12,17 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {useRouter} from "next/navigation"
+import { useAuth } from "../authcontext"
+
 
 export default function SignupForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router=useRouter();
+  const {login}=useAuth();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>):Promise<void> => {
     e.preventDefault();
@@ -38,6 +43,9 @@ export default function SignupForm() {
 
       const result = await response.json();
       console.log(result)
+      login();
+      router.push("/pages/leaderboard");
+
   
     } catch (error) {
       console.log(error)
