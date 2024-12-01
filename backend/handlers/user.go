@@ -2,6 +2,7 @@ package handlers
 
 import (
 	// "fmt"
+	"fmt"
 	"strings"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/Neel-shetty/go-fiber-server/models"
 	"github.com/Neel-shetty/go-fiber-server/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
 
@@ -54,6 +56,10 @@ func CreateUser(c *fiber.Ctx) error {
 		Email:       user.Email,
 		Password:    hashedPassword,
 		PhoneNumber: user.PhoneNumber,
+		Year:        user.Year,
+		Skills:      user.Skills,
+		Branch:      user.Branch,
+		About:       user.About,
 	}
 
 	result := initializers.DB.Create(&newUser)
@@ -69,26 +75,56 @@ func CreateUser(c *fiber.Ctx) error {
 
 func GetUser(c *fiber.Ctx) error {
 	userId := c.Locals("userId")
-	// userPersonalBests, err := MTLastResult("NjYwYTc1MWRhODM0MzBhYTFhYjlmOTcwLnZoWnpxMUdPX1pxZG1tZTEwTnJfbzF3b3Y5bWRRd0dh")
-	// if err != nil {
-	// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": "internal server error"})
-	// }
-	// fmt.Println(time.Unix(userPersonalBests.Data.Timestamp/1000, 0).Date())
-	// fmt.Println(time.Now().Date())
 
 	var user models.GetUserSchema
-	result := initializers.DB.Table("users").First(&user, "id = ?", userId)
+	result := initializers.DB.Table("users").
+		Select("name, email, phone_number, created_at, skills, branch, year, about").
+		Where("id = ?", userId).
+		First(&user)
+
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "User not found"})
-		} else if strings.Contains(result.Error.Error(), "invalid input syntax") {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "invalid user id"})
 		}
-		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": result.Error.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": result.Error.Error()})
+	}
+
+	// Ensure `skills` is never null
+	if user.Skills == nil {
+		user.Skills = pq.StringArray{}
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "user": user})
 }
+
+//func GetUser(c *fiber.Ctx) error {
+//	userId := c.Locals("userId")
+//	// userPersonalBests, err := MTLastResult("NjYwYTc1MWRhODM0MzBhYTFhYjlmOTcwLnZoWnpxMUdPX1pxZG1tZTEwTnJfbzF3b3Y5bWRRd0dh")
+//	// if err != nil {
+//	// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": "internal server error"})
+//	// }
+//	// fmt.Println(time.Unix(userPersonalBests.Data.Timestamp/1000, 0).Date())
+//	// fmt.Println(time.Now().Date())
+//
+//	var user models.GetUserSchema
+//	//result := initializers.DB.Table("users").First(&user, "id = ?", userId)
+//	result := initializers.DB.Table("users").
+//		Select("name, email, phone_number, created_at, skills, branch, year, about").
+//		Where("id = ?", userId).
+//		First(&user)
+//	fmt.Printf("Queried User: %+v\n", user)
+//
+//	if result.Error != nil {
+//		if result.Error == gorm.ErrRecordNotFound {
+//			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "User not found"})
+//		} else if strings.Contains(result.Error.Error(), "invalid input syntax") {
+//			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "invalid user id"})
+//		}
+//		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": result.Error.Error()})
+//	}
+//
+//	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "user": user})
+//}
 
 func DeleteUser(c *fiber.Ctx) error {
 	userId := c.Locals("userId")
@@ -133,6 +169,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 
 	updates := make(map[string]interface{})
+	fmt.Printf("Skills payload: %v\n", payload.Skills)
 
 	if payload.Name != "" {
 		updates["name"] = payload.Name
@@ -146,10 +183,22 @@ func UpdateUser(c *fiber.Ctx) error {
 	if payload.MonkeyTypeApiKey != "" {
 		updates["monkey_type_api_key"] = payload.MonkeyTypeApiKey
 	}
+	if len(payload.Skills) > 0 {
+		updates["skills"] = pq.StringArray(payload.Skills)
+	}
+	if payload.Branch != "" {
+		updates["branch"] = payload.Branch
+	}
+	if payload.Year > 0 {
+		updates["year"] = payload.Year
+	}
+	if payload.About != "" {
+		updates["about"] = payload.About
+	}
 	if payload.Password != "" {
 		hashedPassword, err := utils.HashPassword(payload.Password)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "failed hashing password"})
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "failed updating user"})
 		}
 		updates["password"] = hashedPassword
 	}

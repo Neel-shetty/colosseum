@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 // @Schema
@@ -21,29 +22,45 @@ type User struct {
 	ProfilePic       sql.NullString `json:"profilPic"`
 	Ban              bool           `gorm:"default:0" json:"ban"`
 	MonkeyTypeApiKey sql.NullString `gorm:"column:monkey_type_api_key" json:"monkeyTypeApiKey"`
+	Skills           pq.StringArray `gorm:"type:text[]" json:"skills"`
+	Branch           string         `json:"branch"`
+	Year             int            `gorm:"not null;default:1" json:"year"`
+	About            string         `json:"about"`
 	MonkeyTypeScore  int            `gorm:"not null;default:0" json:"monkeyTypeScore"`
 }
 
 type CreateUserSchema struct {
-	Name        string `json:"name" validate:"required"`
-	Email       string `json:"email" validate:"email,required"`
-	Password    string `json:"password" validate:"required,min=8"`
-	PhoneNumber int    `json:"phoneNumber" validate:"required,min=10"`
+	Name        string         `json:"name" validate:"required"`
+	Email       string         `json:"email" validate:"email,required"`
+	Password    string         `json:"password" validate:"required,min=8"`
+	PhoneNumber int            `json:"phoneNumber" validate:"required,min=10"`
+	Skills      pq.StringArray `json:"skills"`
+	Branch      string         `json:"branch"`
+	Year        int            `json:"year"`
+	About       string         `json:"about"`
 }
 
 type UpdateUserSchema struct {
-	Name             string `json:"name,omitempty"`
-	Email            string `json:"email,omitempty"`
-	Password         string `json:"password,omitempty"`
-	PhoneNumber      int    `json:"phoneNumber,omitempty"`
-	MonkeyTypeApiKey string `json:"monkeyTypeApiKey"`
+	Name             string         `json:"name,omitempty"`
+	Email            string         `json:"email,omitempty"`
+	Password         string         `json:"password,omitempty"`
+	PhoneNumber      int            `json:"phoneNumber,omitempty"`
+	MonkeyTypeApiKey string         `json:"monkeyTypeApiKey"`
+	Skills           pq.StringArray `json:"skills"`
+	Branch           string         `json:"branch"`
+	Year             int            `json:"year"`
+	About            string         `json:"about"`
 }
 
 type GetUserSchema struct {
-	Name        string    `json:"name" validate:"required"`
-	Email       string    `json:"email" validate:"email,required"`
-	PhoneNumber int       `json:"phoneNumber" validate:"required,min=10"`
-	CreatedAt   time.Time `json:"createdAt"`
+	Name        string         `json:"name" validate:"required"`
+	Email       string         `json:"email" validate:"email,required"`
+	PhoneNumber int            `json:"phoneNumber" validate:"required,min=10"`
+	CreatedAt   time.Time      `json:"createdAt"`
+	Skills      pq.StringArray `gorm:"type:text[]" json:"skills"`
+	Branch      string         `json:"branch"`
+	Year        int            `json:"year"`
+	About       string         `json:"about"`
 }
 
 type LoginUserSchema struct {
