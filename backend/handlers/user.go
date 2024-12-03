@@ -94,7 +94,31 @@ func GetUser(c *fiber.Ctx) error {
 		user.Skills = pq.StringArray{}
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "user": user})
+	var leaderboard []models.MTPersonalBestsDB
+	err := initializers.DB.Order("Words_Per_Min desc").Find(&leaderboard).Error
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": "Error fetching leaderboard"})
+	}
+	fmt.Printf("Leaderboard: %v %v\n", userId, leaderboard[1].UserID.String())
+
+	userIdStr := fmt.Sprintf("%v", userId)
+	userRank := 0
+	for i, entry := range leaderboard {
+		if entry.UserID.String() == userIdStr {
+			fmt.Printf("User found at index %v\n", i)
+			userRank = i + 1
+			break
+		}
+	}
+	response := fiber.Map{
+		"status": "success",
+		"user":   user,
+		"rank":   userRank,
+	}
+
+	// return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "user": user})
+	// return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "user": user})
+	return c.Status(fiber.StatusOK).JSON(response)
 }
 
 //func GetUser(c *fiber.Ctx) error {
