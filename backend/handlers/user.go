@@ -232,3 +232,34 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "user has been updated"})
 }
+
+func CheckOnBoarding(c *fiber.Ctx) error {
+	userId := c.Locals("userId")
+
+	var user models.User
+	// just fetch the `showOnBoarding` field
+	result := initializers.DB.Table("users").
+		Select("show_on_boarding").
+		Where("id = ?", userId).
+		First(&user)	
+
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "User not found"})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": result.Error.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "showOnBoarding": user.ShowOnBoarding})
+}
+
+func SetOnBoardingFalse(c *fiber.Ctx) error {
+	userId := c.Locals("userId")
+
+	result := initializers.DB.Model(&models.User{}).Where("id = ?", userId).Update("show_on_boarding", false)
+	if result.Error != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": result.Error.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "showOnBoarding has been set to false"})
+}

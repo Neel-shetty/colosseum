@@ -79,6 +79,8 @@ func main() {
 	app.Use(middlerwares.AuthMiddleware)
 	// authorized routes
 	app.Get("/user", handlers.GetUser)
+	app.Get("/check-onboarding", handlers.CheckOnBoarding)
+	app.Post("/set-onboarding", handlers.SetOnBoardingFalse)
 	app.Patch("/user", handlers.UpdateUser)
 	app.Delete("/user", handlers.DeleteUser)
 	app.Post("/logout", handlers.Logout)

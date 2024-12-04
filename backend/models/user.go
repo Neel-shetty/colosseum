@@ -26,6 +26,7 @@ type User struct {
 	Branch           string         `json:"branch"`
 	Year             int            `gorm:"not null;default:1" json:"year"`
 	About            string         `json:"about"`
+	ShowOnBoarding   bool           `gorm:"not null;default:true" json:"showOnBoarding"`
 	MonkeyTypeScore  int            `gorm:"not null;default:0" json:"monkeyTypeScore"`
 }
 
