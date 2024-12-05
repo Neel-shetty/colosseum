@@ -24,6 +24,8 @@ services:
       - "3000:3000"
     depends_on:
       - postgres
+    volumes:
+      - ~/uploads:/app/uploads
     environment:
       # Adjust these environment variables as needed
       DB_HOST: postgres

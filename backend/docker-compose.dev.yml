@@ -23,6 +23,7 @@ services:
     volumes:
       - .:/app
       - /app/tmp # Ensure temporary files created by `air` are stored inside the container
+      - ~/uploads:/app/uploads
     ports:
       - "3000:3000"
     depends_on:

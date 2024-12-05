@@ -42,9 +42,9 @@ type HTTPError struct {
 func CreateUser(c *fiber.Ctx) error {
 
 	form, err := c.MultipartForm()
-    if err != nil {
-        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "failed", "message": err.Error()})
-    }
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "failed", "message": err.Error()})
+	}
 
 	user := new(models.CreateUserSchema)
 
@@ -74,33 +74,33 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 
 	// Handle profile picture upload
-    files := form.File["profilePic"]
-    if len(files) > 0 {
-        file := files[0]
-        
-        // Create uploads directory if not exists
-        uploadsDir := "uploads/profile_pics"
-        if err := os.MkdirAll(uploadsDir, os.ModePerm); err != nil {
-            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "could not create uploads directory"})
-        }
+	files := form.File["profilePic"]
+	if len(files) > 0 {
+		file := files[0]
 
-        // Generate unique filename
-        filename := fmt.Sprintf("%s_%s%s", 
-            uuid.New().String(), 
-            uuid.New().String(), 
-            filepath.Ext(file.Filename),
-        )
-        filepath := path.Join(uploadsDir, filename)
+		uploadsDir := "/app/uploads/profile_pics"
 
-        // Save file
-        if err := c.SaveFile(file, filepath); err != nil {
-            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "could not save file"})
-        }
+		if err := os.MkdirAll(uploadsDir, os.ModePerm); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "could not create uploads directory"})
+		}
+
+		// Generate unique filename
+		filename := fmt.Sprintf("%s_%s%s",
+			uuid.New().String(),
+			uuid.New().String(),
+			filepath.Ext(file.Filename),
+		)
+		filepath := path.Join(uploadsDir, filename)
+
+		// Save file
+		if err := c.SaveFile(file, filepath); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "could not save file"})
+		}
 
 		// Store relative path in database
 		profilePicUrl := path.Join("/", uploadsDir, filename)
 		newUser.ProfilePic = sql.NullString{String: profilePicUrl, Valid: true}
-    }
+	}
 
 	result := initializers.DB.Create(&newUser)
 
@@ -245,8 +245,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	if len(files) > 0 {
 		file := files[0]
 
-		// Create uploads directory if not exists
-		uploadsDir := "uploads/profile_pics"
+		uploadsDir := "/app/uploads/profile_pics"
 		if err := os.MkdirAll(uploadsDir, os.ModePerm); err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "could not create uploads directory"})
 		}
@@ -265,7 +264,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		}
 
 		// Store relative path in database
-		profilePicUrl := path.Join("/", uploadsDir, filename)
+		profilePicUrl := path.Join("/uploads/profile_pics", filename)
 		updates["profile_pic"] = profilePicUrl
 	}
 

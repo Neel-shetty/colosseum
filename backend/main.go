@@ -87,7 +87,7 @@ func main() {
 	app.Post("/mt-personal-best", handlers.PostMTPersonalBests)
 	app.Get("/mt-personal-best", handlers.GetMTPersonalBests)
 
-	app.Static("/uploads", "./uploads")
+	app.Static("/uploads", "/app/uploads")
 
 	// cron jobs
 	go routines.PollMTPersonalBests(10 * time.Second)
