@@ -2,7 +2,11 @@ package handlers
 
 import (
 	// "fmt"
+	"database/sql"
 	"fmt"
+	"os"
+	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -10,6 +14,7 @@ import (
 	"github.com/Neel-shetty/go-fiber-server/models"
 	"github.com/Neel-shetty/go-fiber-server/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
@@ -35,6 +40,12 @@ type HTTPError struct {
 // @Failure 500 {object} HTTPError
 // @Router /user [post]
 func CreateUser(c *fiber.Ctx) error {
+
+	form, err := c.MultipartForm()
+    if err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "failed", "message": err.Error()})
+    }
+
 	user := new(models.CreateUserSchema)
 
 	if err := c.BodyParser(user); err != nil {
@@ -62,6 +73,35 @@ func CreateUser(c *fiber.Ctx) error {
 		About:       user.About,
 	}
 
+	// Handle profile picture upload
+    files := form.File["profilePic"]
+    if len(files) > 0 {
+        file := files[0]
+        
+        // Create uploads directory if not exists
+        uploadsDir := "uploads/profile_pics"
+        if err := os.MkdirAll(uploadsDir, os.ModePerm); err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "could not create uploads directory"})
+        }
+
+        // Generate unique filename
+        filename := fmt.Sprintf("%s_%s%s", 
+            uuid.New().String(), 
+            uuid.New().String(), 
+            filepath.Ext(file.Filename),
+        )
+        filepath := path.Join(uploadsDir, filename)
+
+        // Save file
+        if err := c.SaveFile(file, filepath); err != nil {
+            return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "could not save file"})
+        }
+
+		// Store relative path in database
+		profilePicUrl := path.Join("/", uploadsDir, filename)
+		newUser.ProfilePic = sql.NullString{String: profilePicUrl, Valid: true}
+    }
+
 	result := initializers.DB.Create(&newUser)
 
 	if result.Error != nil && strings.Contains(result.Error.Error(), "duplicate key value violates unique") {
@@ -78,7 +118,7 @@ func GetUser(c *fiber.Ctx) error {
 
 	var user models.GetUserSchema
 	result := initializers.DB.Table("users").
-		Select("name, email, phone_number, created_at, skills, branch, year, about").
+		Select("name, email, phone_number, created_at, skills, branch, year, about, profile_pic").
 		Where("id = ?", userId).
 		First(&user)
 
@@ -165,8 +205,14 @@ func DeleteUser(c *fiber.Ctx) error {
 
 func UpdateUser(c *fiber.Ctx) error {
 	userId := c.Locals("userId")
-
 	payload := new(models.UpdateUserSchema)
+
+	// Handle multipart form data
+	form, err := c.MultipartForm()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "failed", "message": err.Error()})
+	}
+
 	if err := c.BodyParser(payload); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "failed", "message": err.Error()})
 	}
@@ -194,6 +240,34 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	updates := make(map[string]interface{})
 	fmt.Printf("Skills payload: %v\n", payload.Skills)
+
+	files := form.File["profilePic"]
+	if len(files) > 0 {
+		file := files[0]
+
+		// Create uploads directory if not exists
+		uploadsDir := "uploads/profile_pics"
+		if err := os.MkdirAll(uploadsDir, os.ModePerm); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "could not create uploads directory"})
+		}
+
+		// Generate unique filename
+		filename := fmt.Sprintf("%s_%s%s",
+			userId,
+			uuid.New().String(),
+			filepath.Ext(file.Filename),
+		)
+		filepath := path.Join(uploadsDir, filename)
+
+		// Save file
+		if err := c.SaveFile(file, filepath); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "could not save file"})
+		}
+
+		// Store relative path in database
+		profilePicUrl := path.Join("/", uploadsDir, filename)
+		updates["profile_pic"] = profilePicUrl
+	}
 
 	if payload.Name != "" {
 		updates["name"] = payload.Name
@@ -228,7 +302,10 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 
 	updates["updated_at"] = time.Now()
-	initializers.DB.Model(&user).Updates(updates)
+	// initializers.DB.Model(&user).Updates(updates)
+	if err := initializers.DB.Model(&user).Updates(updates).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "failed", "message": "update failed"})
+	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "user has been updated"})
 }
@@ -241,7 +318,7 @@ func CheckOnBoarding(c *fiber.Ctx) error {
 	result := initializers.DB.Table("users").
 		Select("show_on_boarding").
 		Where("id = ?", userId).
-		First(&user)	
+		First(&user)
 
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {

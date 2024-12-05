@@ -39,6 +39,7 @@ type CreateUserSchema struct {
 	Branch      string         `json:"branch"`
 	Year        int            `json:"year"`
 	About       string         `json:"about"`
+	
 }
 
 type UpdateUserSchema struct {
@@ -51,6 +52,7 @@ type UpdateUserSchema struct {
 	Branch           string         `json:"branch"`
 	Year             int            `json:"year"`
 	About            string         `json:"about"`
+	ProfilePic	   string         `json:"profilePic"`
 }
 
 type GetUserSchema struct {
@@ -62,6 +64,7 @@ type GetUserSchema struct {
 	Branch      string         `json:"branch"`
 	Year        int            `json:"year"`
 	About       string         `json:"about"`
+	ProfilePic  string         `json:"profilePic,omitempty"`
 }
 
 type LoginUserSchema struct {
