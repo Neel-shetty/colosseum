@@ -49,7 +49,26 @@ export default function Login() {
 
       setMessage(result.message || "Login successful");
       login();
-      router.push("/pages/leaderboard");
+      const onboardingResponse = await fetch(
+        "http://localhost:3000/check-onboarding",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      if (!onboardingResponse.ok) {
+        throw new Error("Failed to check onboarding status");
+      }
+
+      const onboardingData = await onboardingResponse.json();
+
+      
+      if (onboardingData.showOnBoarding) {
+        router.push("/instructions");
+      } else {
+        router.push("/pages/leaderboard");
+      }
     } catch (error) {
       console.log(error);
       setMessage(error?.message);

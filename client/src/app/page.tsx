@@ -1,13 +1,9 @@
-import Link from "next/link";
-import Login from "./login/page";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <>
-    <Login/>
+  
+    redirect("/pages/leaderboard");
    
    
-    </>
-   
-  );
-}
+};
+

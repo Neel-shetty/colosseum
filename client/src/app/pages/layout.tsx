@@ -13,9 +13,13 @@ export default function PageLayout({
 }) {
   const { logout } = useAuth(); 
   const router=useRouter();
-  const handleClick = () => {
-    logout(); 
+  const handleSignIn = () => {
+    
     router.push("/login")
+  };
+  const handleSignUp = () => {
+    
+    router.push("/signup")
   };
   return (
     <>
@@ -29,12 +33,13 @@ export default function PageLayout({
               <img src="" alt="Logo" />
             </div>
             <div className="text-white space-x-4">
-              <Link href="#">Home</Link>
+              
 
               <Link href="/pages/leaderboard">Leaderboard</Link>
              
               <Link href="/pages/profile">Profile</Link>
-              <button onClick={handleClick} className="bg-zinc-800 text-white  py-2 rounded">Logout</button>
+              <button onClick={handleSignIn} className="bg-zinc-800 text-white  py-2 rounded">Sign In</button>
+              <button onClick={handleSignUp} className="bg-zinc-800 text-white  py-2 rounded">Sign Up</button>
             </div>
           </div>
         </nav>
