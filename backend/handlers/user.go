@@ -280,8 +280,12 @@ func UpdateUser(c *fiber.Ctx) error {
 	if payload.MonkeyTypeApiKey != "" {
 		updates["monkey_type_api_key"] = payload.MonkeyTypeApiKey
 	}
-	if len(payload.Skills) > 0 {
-		updates["skills"] = pq.StringArray(payload.Skills)
+	//	if len(payload.Skills) > 0 {
+	//		updates["skills"] = payload.Skills
+	//	}
+	skills := form.Value["skills"]
+	if len(skills) > 0 {
+		updates["skills"] = pq.StringArray(skills)
 	}
 	if payload.Branch != "" {
 		updates["branch"] = payload.Branch
