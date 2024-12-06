@@ -60,7 +60,7 @@ export default function Leaderboard() {
   };
 
   return (
-    <Protectedroutes>
+    
       <div className="flex flex-col items-center bg-bg-color pt-10 space-y-6 w-full">
         <div className="flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0 w-11/12 sm:w-4/5 max-w-3xl">
           <form action="" className="flex-grow">
@@ -146,6 +146,6 @@ export default function Leaderboard() {
           </div>
         </div>
       </div>
-    </Protectedroutes>
+    
   );
 }

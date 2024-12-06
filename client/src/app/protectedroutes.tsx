@@ -10,17 +10,23 @@ export default function Protectedroutes({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isLoggedIn === false && !loading) {
-      router.push("/login");
-    } else if (isLoggedIn === true) {
+    if (isLoggedIn === false) {
+      
+      router.push("/pages/leaderboard");
+      setTimeout(()=>{
+        alert("you need to log in to view this page");
+      },100);
+;      
+    } else if (isLoggedIn===true) {
       setLoading(false);
     }
-  }, [isLoggedIn, loading,router]);
+  }, [isLoggedIn,router]);
 
-  if (isLoggedIn === null || loading) {
+  if (isLoggedIn===null||loading) {
     return (
       <div className="bg-bg-color flex items-center justify-center h-screen text-3xl">
         <BeatLoader color="#ffffff" />
+        
       </div>
     );
   }
