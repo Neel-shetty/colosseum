@@ -272,7 +272,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		updates["name"] = payload.Name
 	}
 	if payload.PhoneNumber != 0 {
-		updates["phoneNumber"] = payload.PhoneNumber
+		updates["phone_number"] = payload.PhoneNumber
 	}
 	if payload.Email != "" {
 		updates["email"] = payload.Email
