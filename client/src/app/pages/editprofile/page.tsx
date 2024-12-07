@@ -30,7 +30,7 @@ export default function Page() {
         const data = await response.json();
         if (data && data.user) setProfileData({
           ...data.user,
-          skills: data.user.skills || [],
+          skills: Array.isArray(data.user.skills) ? data.user.skills : [],
           profilePic: null,
         });
       } catch (error) {
@@ -73,10 +73,9 @@ export default function Page() {
     formData.append('about', profileData.about);
     
     
-    const skills = Array.isArray(profileData.skills)
-    ? profileData.skills
-    : profileData.skills.split(",").map((skill) => skill.trim());
-formData.append("skills", JSON.stringify(skills));
+    profileData.skills.forEach((value)=>{
+      formData.append("skills",value)      
+    })
     
     
     if (profileData.profilePic) {
@@ -163,13 +162,11 @@ formData.append("skills", JSON.stringify(skills));
 
                 <input
                   type="text"
-                  value={Array.isArray(profileData.skills) 
-                    ? profileData.skills.join(', ') 
-                    : profileData.skills}
+                  value={profileData.skills.join(",")}
                   placeholder={profileData.skills}
                   disabled={!isEditing}
                   onChange={(e) =>
-                    setProfileData({ ...profileData, skills: e.target.value })
+                    setProfileData({ ...profileData, skills: e.target.value.split(",").map(skill => skill.trim()) })
                   }
                   className="w-3/4 bg-transparent border-b-2 border-gray-700 text-white outline-none"
                 />

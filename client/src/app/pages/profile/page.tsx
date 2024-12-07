@@ -61,12 +61,11 @@ export default function ProfilePage() {
         {/* Profile Card */}
         <Card className="mx-auto max-w-2xl w-full bg-neutral-900 p-2 rounded-md shadow-xl shadow-slate-950 border border-white">
           <div className="flex flex-col sm:flex-row sm:gap-4 items-center sm:items-start ml-3">
-            <img
-              src={`http://localhost:3000${profiledata.profilePic}`}
+          <img
+              src={profiledata.profilePic ? `http://localhost:3000${profiledata.profilePic}` : '/image.png'}
               alt="Profile"
-              className="w-40 h-36 mt-10 sm:w-48 sm:h-40 rounded-full border-2 border-gray-700 sm:mb-0 mb-4"
+              className="w-48 h-36 mt-7 sm:w-50 sm:h-36 rounded-full border-2 border-gray-700 sm:mb-0 mb-4 object-cover"
             />
-
             <div className="flex flex-col w-full">
               <CardHeader className="flex flex-col sm:flex-row sm:space-x-4">
                 <div className="flex flex-col flex-grow">
@@ -84,7 +83,7 @@ export default function ProfilePage() {
 
               <CardContent className="mt-2 flex flex-wrap gap-4 text-center">
                 <div className="bg-zinc-950 rounded-md px-4 py-1 border border-white text-white text-sm">
-                  {`${profiledata?.branch}-${profiledata?.year} Year`}
+                  {`${profiledata?.branch || '[BRANCH]'}-${profiledata?.year} Year`}
                 </div>
                 <div className="bg-zinc-950 rounded-md px-4 py-1 border border-white text-sm text-white">
                   Rank - {profiledata?.rank}

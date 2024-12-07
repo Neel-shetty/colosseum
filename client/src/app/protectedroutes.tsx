@@ -11,11 +11,12 @@ export default function Protectedroutes({ children }) {
 
   useEffect(() => {
     if (isLoggedIn === false) {
-      
+      const authstate = localStorage.getItem("isAuthenticated");
+    if (authstate !== "false"){
       router.push("/pages/leaderboard");
       setTimeout(()=>{
         alert("you need to log in to view this page");
-      },100);
+      },100);}
 ;      
     } else if (isLoggedIn===true) {
       setLoading(false);

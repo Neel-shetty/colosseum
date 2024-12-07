@@ -30,23 +30,19 @@ export default function SignupForm() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     
-    const userData = {
-      "name": firstName,
-      "email": email,
-      "password": password,
-      "phoneNumber": parseInt(phoneNumber),
-      "year": parseInt(year),
-      "branch":branch  
-    }
+    const userData = new FormData();
+    userData.append("name",firstName);
+    userData.append("email",email);
+    userData.append("password",password);
+    userData.append("phoneNumber",phoneNumber);
+    userData.append("year",year);
+    userData.append("branch",branch);
 
     try {
       const response = await fetch("http://localhost:3000/user", {
         method: "POST",
         credentials:"include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
+        body: userData,
       });
 
       if (!response.ok) {
@@ -132,7 +128,7 @@ export default function SignupForm() {
                   id="branch"
                   type="text"
                   placeholder="CSE"
-                  value={year}
+                  value={branch}
                   required
                   onChange={(e) => setBranch(e.target.value)}
                 />
