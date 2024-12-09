@@ -161,6 +161,53 @@ func GetUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(response)
 }
 
+func GetUserById(c *fiber.Ctx) error {
+	// Get the user ID from the request parameters
+	userId := c.Params("id")
+
+	var user models.GetUserSchema
+	result := initializers.DB.Table("users").
+		Select("name, email, phone_number, created_at, skills, branch, year, about, profile_pic").
+		Where("id = ?", userId).
+		First(&user)
+
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "User not found"})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": result.Error.Error()})
+	}
+
+	// Ensure `skills` is never null
+	if user.Skills == nil {
+		user.Skills = pq.StringArray{}
+	}
+
+	// Fetch leaderboard data
+	var leaderboard []models.MTPersonalBestsDB
+	err := initializers.DB.Order("Words_Per_Min desc").Find(&leaderboard).Error
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "fail", "message": "Error fetching leaderboard"})
+	}
+
+	userRank := 0
+	for i, entry := range leaderboard {
+		if entry.UserID.String() == userId {
+			userRank = i + 1
+			break
+		}
+	}
+
+	// Construct the response
+	response := fiber.Map{
+		"status": "success",
+		"user":   user,
+		"rank":   userRank,
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response)
+}
+
 //func GetUser(c *fiber.Ctx) error {
 //	userId := c.Locals("userId")
 //	// userPersonalBests, err := MTLastResult("NjYwYTc1MWRhODM0MzBhYTFhYjlmOTcwLnZoWnpxMUdPX1pxZG1tZTEwTnJfbzF3b3Y5bWRRd0dh")

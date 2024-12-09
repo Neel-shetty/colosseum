@@ -31,6 +31,7 @@ func Leaderboard(c *fiber.Ctx) error {
 			WordsPerMin: entry.WordsPerMin,
 			Timestamp:   entry.Timestamp,
 			UserName:    entry.User.Name, // Only the name is included here
+			UserID:      entry.UserID,
 		})
 	}
 
