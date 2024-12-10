@@ -48,7 +48,7 @@ export default function Login() {
       console.log(result);
 
       setMessage(result.message || "Login successful");
-      login();
+      login(result.userId);
       const onboardingResponse = await fetch(
         "http://localhost:3000/check-onboarding",
         {
