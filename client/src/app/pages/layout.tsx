@@ -12,6 +12,7 @@ export default function PageLayout({
   children: React.ReactNode;
 }) {
   const { isLoggedIn} = useAuth(); 
+  const userId=localStorage.getItem("userId");
   const router=useRouter();
   const handleSignIn = () => {
     
@@ -37,7 +38,7 @@ export default function PageLayout({
 
               <Link href="/pages/leaderboard">Leaderboard</Link>
              
-              {isLoggedIn && <Link href="/pages/profile">Profile</Link>}
+              {isLoggedIn && <Link href={`/pages/profile?userId=${userId}`} passHref>Profile</Link>}
               {!isLoggedIn && (<><button onClick={handleSignIn} className="bg-zinc-800 text-white  py-2 rounded">Sign In</button>
               <button onClick={handleSignUp} className="bg-zinc-800 text-white  py-2 rounded">Sign Up</button></>)}
              

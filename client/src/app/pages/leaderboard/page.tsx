@@ -55,8 +55,8 @@ export default function Leaderboard() {
     setFilteredUsers(filteredItems);
   }, [searchItem, tabledata]);
 
-  const handleNameClick = (name) => {
-    router.push("/pages/profile");
+  const handleNameClick = (userId) => {
+    router.push(`/pages/profile?userId=${userId}`);
   };
 
   return (
@@ -119,7 +119,7 @@ export default function Leaderboard() {
                     </TableCell>
                     <TableCell
                       className="text-center whitespace-nowrap"
-                      onClick={() => handleNameClick(data.name)}
+                      onClick={() => handleNameClick(data.userId)}
                       role="button"
                     >
                       {data.name || "-"}

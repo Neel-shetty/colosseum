@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Protectedroutes from "@/app/protectedroutes";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
@@ -12,51 +12,45 @@ import { useAuth } from "@/app/authcontext";
 
 
 export default function ProfilePage() {
-  const {logout}=useAuth();
+  const { isLoggedIn,userId,logout} = useAuth(); 
   const [profiledata, setprofiledata] = useState({});
-  const router=useRouter();
+  const [modal, setModal] = useState(false);
 
-  const[modal,setModal]=useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const userid = searchParams.get("userId"); 
 
-  const toggleModal=()=>{
-    setModal(!modal);
-  }
+  const toggleModal = () => setModal(!modal);
+
   const handleOptionClick = (option) => {
-    if(option=="editProfile")
-    {
+    if (option === "editProfile") {
       router.push("/pages/editprofile");
-
-    }else if(option==="logout"){
-      
+    } else if (option === "logout") {
       logout();
-      
     }
-   setModal(false);
-    
-  };
-  const closeModal=(e)=>{
-    if (e.target.id=="modalBackdrop")
     setModal(false);
-  }
+  };
 
-  useEffect(()=>{
-    fetch("http://localhost:3000/user",{
+  const closeModal = (e) => {
+    if (e.target.id === "modalBackdrop") setModal(false);
+  };
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/user/${userid}`, {
       method: "GET",
       credentials: "include",
     })
-    .then((res)=>res.json())
-    .then((data)=>{
-      console.log(data);
-      setprofiledata({...data.user,rank:data.rank});
+      .then((res) => res.json())
+      .then((data) => {
+        setprofiledata({ ...data.user, rank: data.rank });
+      })
+      .catch((err) => console.log(err.message));
+  }, [userid]);
 
-    })
-    .catch((err)=>{
-      console.log(err.message);
-    })
-  },[]);
+  const isOwnProfile = isLoggedIn && userId === userid;
 
   return (
-    <Protectedroutes>
+    <Protectedroutes allowPublicAccess={true}>
       <div className="flex flex-col items-center bg-bg-color min-h-screen py-10 text-white">
         {/* Profile Card */}
         <Card className="mx-auto max-w-2xl w-full bg-neutral-900 p-2 rounded-md shadow-xl shadow-slate-950 border border-white">
@@ -74,11 +68,12 @@ export default function ProfilePage() {
                   </h2>
                   <p className="text-sm text-gray-400">{profiledata?.email}</p>
                 </div>
-                <button
+                {isOwnProfile && ( <button
                   className="self-start -mt-2" onClick={toggleModal}
                 >
                   <FontAwesomeIcon icon={faGear} className="text-gray-400 w-5 h-5"/>
-                </button>
+                </button>)}
+               
               </CardHeader>
 
               <CardContent className="mt-2 flex flex-wrap gap-4 text-center">

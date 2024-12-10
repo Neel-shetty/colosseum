@@ -9,7 +9,8 @@ import React, {
 import { useRouter } from "next/navigation";
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: () => void;
+  userId: string | null;
+  login: (userId: string) => void;
   logout: () => void;
 }
 
@@ -30,17 +31,22 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const router=useRouter();
   const [isLoggedIn, setisLoggedIn] = useState<boolean | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const authstate = localStorage.getItem("isAuthenticated");
     setisLoggedIn(authstate === "true");
+    const storedUserId = localStorage.getItem("userId");
+    setUserId(storedUserId);
     setLoading(false);
   }, []);
 
-  const login = () => {
+  const login = (userId: string) => {
     localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("userId", userId);
     setisLoggedIn(true);
+    setUserId(userId);
   };
   const logout = () => {
     setLoading(true);
@@ -53,7 +59,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, userId,login, logout }}>
       {children}
     </AuthContext.Provider>
   );
