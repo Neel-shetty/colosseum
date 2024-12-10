@@ -100,6 +100,7 @@ type Leaderboard struct {
 	WordsPerMin float64   `json:"wpm"`
 	Timestamp   time.Time `json:"timestamp"`
 	UserName    string    `json:"name"`
+	UserID      uuid.UUID `json:"userId"`
 }
 
 type MTLastResultResponse struct {
