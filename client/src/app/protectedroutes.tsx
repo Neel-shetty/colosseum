@@ -1,13 +1,18 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useAuth } from "./authcontext";
 import BeatLoader from "react-spinners/BeatLoader";
+
+interface ProtectedRoutesProps {
+  children: ReactNode; 
+  allowPublicAccess?: boolean; 
+}
 
 export default function Protectedroutes({ 
   children, 
   allowPublicAccess = false 
-}) {
+}: ProtectedRoutesProps) {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
   const [loading, setLoading] = useState(true);

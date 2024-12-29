@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { useRouter } from "next/navigation";
 interface AuthContextType {
-  isLoggedIn: boolean;
+  isLoggedIn: boolean | null;
   userId: string | null;
   login: (userId: string) => void;
   logout: () => void;
@@ -50,7 +50,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
   const logout = () => {
     setLoading(true);
-    localStorage.removeItem("isAuthenticated"); 
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("userId"); 
     router.push("/pages/leaderboard"); 
     setTimeout(() => {
         setisLoggedIn(false);

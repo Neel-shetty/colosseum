@@ -12,6 +12,7 @@ const FirstVisitInstructions: React.FC<FirstVisitInstructionsProps> = ({ onApiKe
   const [apiKey, setApiKey] = useState("");
   const [copied, setCopied] = useState(false);
   const router = useRouter();
+  const api=process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const handleCopy = () => {
     navigator.clipboard.writeText("monkeytype.com");
@@ -21,13 +22,13 @@ const FirstVisitInstructions: React.FC<FirstVisitInstructionsProps> = ({ onApiKe
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3000/user", {
+      const formData = new FormData();
+      formData.append("monkeyTypeApiKey", apiKey);
+
+      const response = await fetch(`${api}/user`, {
         method: "PATCH",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ apiKey }),
+        body: formData,
       });
 
       const result = await response.json();
@@ -44,16 +45,16 @@ const FirstVisitInstructions: React.FC<FirstVisitInstructionsProps> = ({ onApiKe
 
   const completeOnboarding = async () => {
     try {
-      const response = await fetch("http://localhost:3000/set-onboarding", {
+      const response = await fetch(`${api}/set-onboarding`, {
         method: "POST",
         credentials: "include",
       });
-  
+
       if (response.ok) {
         router.push("/pages/leaderboard");
       } else {
-        const result=await response.json();
-        console.error("Failed to complete onboarding",result.message);
+        const result = await response.json();
+        console.error("Failed to complete onboarding", result.message);
       }
     } catch (error) {
       console.error("Error completing onboarding:", error);
@@ -61,14 +62,14 @@ const FirstVisitInstructions: React.FC<FirstVisitInstructionsProps> = ({ onApiKe
   };
 
   return (
-    <div className="flex items-center justify-center bg-black overflow-y-auto py-10">
-      <div className="bg-neutral-900 text-white rounded-xl shadow-2xl p-10 max-w-7xl w-full relative border border-neutral-700 space-y-6 my-10">
-       
-        <h2 className="text-4xl font-bold text-blue-400 text-center">MonkeyType API Setup</h2>
-        
-        <div className="flex items-center justify-center mb-4">
-          <span className="mr-3 text-xl">🔗</span>
-          <div className="flex items-center bg-neutral-800 rounded px-3 py-2">
+    <div className="flex items-center justify-center bg-black overflow-y-auto py-10 px-4">
+      <div className="bg-neutral-900 text-white rounded-xl shadow-2xl p-6 max-w-4xl w-full relative border border-neutral-700 space-y-6 my-10">
+
+        <h2 className="text-3xl md:text-4xl font-bold text-blue-400 text-center">MonkeyType API Setup</h2>
+
+        <div className="flex flex-col items-center md:flex-row md:justify-center mb-4 space-y-2 md:space-y-0 md:space-x-4">
+          <span className="text-xl">🔗</span>
+          <div className="flex items-center bg-neutral-800 rounded px-3 py-2 w-full md:w-auto">
             <span className="mr-2">monkeytype.com</span>
             <button 
               onClick={handleCopy} 
@@ -77,86 +78,32 @@ const FirstVisitInstructions: React.FC<FirstVisitInstructionsProps> = ({ onApiKe
               <Copy size={16} />
             </button>
           </div>
-          {copied && <span className="ml-2 text-green-400">Copied!</span>}
+          {copied && <span className="text-green-400">Copied!</span>}
         </div>
-        
+
         <ol className="space-y-6 text-lg text-neutral-300">
           <li className="flex items-center space-x-4">
-            <span className="text-2xl font-bold text-blue-400 mr-2">1.</span>
+            <span className="text-2xl font-bold text-blue-400">1.</span>
             <span>Create account & log in</span>
           </li>
-          <li className="flex flex-col space-y-2">
-            <div className="flex items-center space-x-4">
-              <span className="text-2xl font-bold text-blue-400 mr-2">2.</span>
-              <span>Go to Profile → Account Settings</span>
-            </div>
-            <div className="w-full h-64 relative rounded-lg overflow-hidden">
-              <Image 
-                src="/api_instructions/cynergy_1.png" 
-                alt="Account Settings" 
-                fill
-                className="object-cover"
-              />
-            </div>
-          </li>
-          <li className="flex flex-col space-y-2">
-            <div className="flex items-center space-x-4">
-              <span className="text-2xl font-bold text-blue-400 mr-2">3.</span>
-              <span>Select API Keys</span>
-            </div>
-            <div className="w-full h-64 relative rounded-lg overflow-hidden">
-              <Image 
-                src="/api_instructions/cynergy_2.png" 
-                alt="API Keys" 
-                fill
-                className="object-cover"
-              />
-            </div>
-          </li>
-          <li className="flex flex-col space-y-2">
-            <div className="flex items-center space-x-4">
-              <span className="text-2xl font-bold text-blue-400 mr-2">4.</span>
-              <span>Generate a new key</span>
-            </div>
-            <div className="w-full h-64 relative rounded-lg overflow-hidden">
-              <Image 
-                src="/api_instructions/cynergy_4.png" 
-                alt="Generate Key" 
-                fill
-                className="object-cover"
-              />
-            </div>
-          </li>
-          <li className="flex flex-col space-y-2">
-            <div className="flex items-center space-x-4">
-              <span className="text-2xl font-bold text-blue-400 mr-2">5.</span>
-              <span>Copy the generated key</span>
-            </div>
-            <div className="w-full h-64 relative rounded-lg overflow-hidden">
-              <Image 
-                src="/api_instructions/cynergy_5.png" 
-                alt="Copy Key" 
-                fill
-                className="object-cover"
-              />
-            </div>
-          </li>
-          <li className="flex flex-col space-y-2">
-            <div className="flex items-center space-x-4">
-              <span className="text-2xl font-bold text-blue-400 mr-2">6.</span>
-              <span>Activate the key</span>
-            </div>
-            <div className="w-full h-64 relative rounded-lg overflow-hidden">
-              <Image 
-                src="/api_instructions/cynergy_6.png" 
-                alt="Copy Key" 
-                fill
-                className="object-cover"
-              />
-            </div>
-          </li>
+          {Array.from({ length: 5 }, (_, index) => (
+            <li key={index} className="flex flex-col space-y-2">
+              <div className="flex items-center space-x-4">
+                <span className="text-2xl font-bold text-blue-400">{index + 2}.</span>
+                <span>{["Go to Profile → Account Settings", "Select API Keys", "Generate a new key", "Copy the generated key", "Activate the key"][index]}</span>
+              </div>
+              <div className="w-full h-48 md:h-64 relative rounded-lg overflow-hidden">
+                <Image 
+                  src={`/api_instructions/cynergy_${index + 1}.png`} 
+                  alt={"Step " + (index + 2)} 
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </li>
+          ))}
         </ol>
-        
+
         <div className="mb-6">
           <label className="block mb-2 text-neutral-400 text-lg">Paste Your API Key</label>
           <input 
@@ -167,11 +114,11 @@ const FirstVisitInstructions: React.FC<FirstVisitInstructionsProps> = ({ onApiKe
             className="w-full bg-neutral-800 border border-neutral-700 rounded px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        
+
         <button 
           onClick={handleSubmit}
           disabled={!apiKey.trim()}
-          className="w-full bg-blue-600 text-white py-4 text-lg rounded hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-blue-600 text-white py-3 text-lg rounded hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Submit API Key
         </button>
@@ -181,6 +128,7 @@ const FirstVisitInstructions: React.FC<FirstVisitInstructionsProps> = ({ onApiKe
 };
 
 export default FirstVisitInstructions;
+
 
 
 
