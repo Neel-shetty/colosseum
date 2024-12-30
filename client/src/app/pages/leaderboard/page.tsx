@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -24,15 +24,24 @@ import {
 } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
 
+
+interface User {
+  userId: string; 
+  name: string;
+  wpm: number;
+  acc: number;
+}
+
 export default function Leaderboard() {
-  const [tabledata, settabledata] = useState([]);
-  const [searchItem, setSearchItem] = useState("");
-  const [filteredusers, setFilteredUsers] = useState([]);
+  const [tabledata, settabledata] = useState<User[]>([]);
+  const [searchItem, setSearchItem] = useState<string>("");
+  const [filteredusers, setFilteredUsers] = useState<User[]>([]);
+  const api=process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const router = useRouter();
 
   useEffect(() => {
-    fetch("http://localhost:3000/leaderboard")
+    fetch(`${api}/leaderboard`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -44,7 +53,7 @@ export default function Leaderboard() {
       });
   }, []);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e:  ChangeEvent<HTMLInputElement>) => {
     setSearchItem(e.target.value);
   };
 
@@ -55,7 +64,7 @@ export default function Leaderboard() {
     setFilteredUsers(filteredItems);
   }, [searchItem, tabledata]);
 
-  const handleNameClick = (userId) => {
+  const handleNameClick = (userId:string) => {
     router.push(`/pages/profile?userId=${userId}`);
   };
 

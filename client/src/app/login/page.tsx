@@ -22,6 +22,7 @@ export default function Login() {
   const [message, setMessage] = useState(null);
   const router = useRouter();
   const { login } = useAuth();
+  const api=process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -31,7 +32,7 @@ export default function Login() {
     const data = { email, password };
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch(`${api}/login`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -50,7 +51,7 @@ export default function Login() {
       setMessage(result.message || "Login successful");
       login(result.userId);
       const onboardingResponse = await fetch(
-        "http://localhost:3000/check-onboarding",
+        `${api}/check-onboarding`,
         {
           method: "GET",
           credentials: "include",
@@ -71,8 +72,9 @@ export default function Login() {
       }
     } catch (error) {
       console.log(error);
-      setMessage(error?.message);
-    } finally {
+      setMessage((error as any)?.message || "An unexpected error occurred");
+    }
+    finally {
       setLoading(false);
     }
   };

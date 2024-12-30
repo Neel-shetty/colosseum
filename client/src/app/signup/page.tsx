@@ -26,6 +26,7 @@ export default function SignupForm() {
   const [message, setMessage] = useState(null);
   const router = useRouter();
   const { login } = useAuth();
+  const api=process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -39,7 +40,7 @@ export default function SignupForm() {
     userData.append("branch",branch);
 
     try {
-      const response = await fetch("http://localhost:3000/user", {
+      const response = await fetch(`${api}/user`, {
         method: "POST",
         credentials:"include",
         body: userData,
@@ -58,7 +59,7 @@ export default function SignupForm() {
 
     } catch (error) {
       console.error('Detailed error:', error);
-      setMessage(error?.message);
+      setMessage((error as any)?.message || "An unexpected error occurred");
     }
   };
 
