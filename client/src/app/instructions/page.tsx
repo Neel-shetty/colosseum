@@ -8,7 +8,7 @@ interface FirstVisitInstructionsProps {
   onApiKeySubmit: (key: string) => void;
 }
 
-const FirstVisitInstructions: React.FC<FirstVisitInstructionsProps> = ({ onApiKeySubmit }) => {
+export default function FirstVisitInstructions(onapikeysubmit: FirstVisitInstructionsProps ) {
   const [apiKey, setApiKey] = useState("");
   const [copied, setCopied] = useState(false);
   const router = useRouter();
@@ -127,7 +127,7 @@ const FirstVisitInstructions: React.FC<FirstVisitInstructionsProps> = ({ onApiKe
   );
 };
 
-export default FirstVisitInstructions;
+
 
 
 
