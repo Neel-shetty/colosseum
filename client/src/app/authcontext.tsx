@@ -48,6 +48,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setisLoggedIn(true);
     setUserId(userId);
   };
+
+  
   const logout = () => {
     setLoading(true);
     localStorage.removeItem("isAuthenticated");

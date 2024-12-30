@@ -4,11 +4,11 @@ import { Copy } from "lucide-react";
 import Image from 'next/image';
 import { useRouter } from "next/navigation";
 
-interface FirstVisitInstructionsProps {
-  onApiKeySubmit: (key: string) => void;
-}
+// interface FirstVisitInstructionsProps {
+  //onApiKeySubmit: (key: string) => void;
+//}
 
-export default function FirstVisitInstructions(onapikeysubmit: FirstVisitInstructionsProps ) {
+export default function FirstVisitInstructions( ) {
   const [apiKey, setApiKey] = useState("");
   const [copied, setCopied] = useState(false);
   const router = useRouter();

@@ -3,9 +3,23 @@ import Protectedroutes from "@/app/protectedroutes";
 import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/authcontext";
+import dynamic from "next/dynamic";
+
+type ProfileData = {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  about: string;
+  skills: string[]; 
+  profilePic: File | null;
+  monkeyTypeApiKey: string;
+};
+
+
 
 export default function Page() {
-  const [profileData, setProfileData] = useState({
+  const [profileData, setProfileData] = useState<ProfileData>({
     name: "",
     email: "",
     phoneNumber: "",
@@ -18,12 +32,23 @@ export default function Page() {
   const [isEditing, setIsEditing] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [userId,setUserId]=useState<string |null>(null);
   const router = useRouter();
-  const userId = localStorage.getItem("userId");
+  
   const api=process.env.NEXT_PUBLIC_API_BASE_URL;
 
+  useEffect(()=>{
+    if(typeof window !="undefined"){const storeUserId=localStorage.getItem("userId");
+      setUserId(storeUserId);}
+    
+  },[]);
+  
+
   useEffect(() => {
+    
     const fetchProfile = async () => {
+
+      
       try {
         const response = await fetch(`${api}/user`, {
           method: "GET",

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "../authcontext";
@@ -10,9 +10,10 @@ export default function PageLayout({
   children: React.ReactNode;
 }) {
   const { isLoggedIn } = useAuth();
-  const userId = localStorage.getItem("userId");
+  //const userId = localStorage.getItem("userId");
   const router = useRouter();
   const pathname = usePathname();
+  const [userId,setUserId]=useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSignIn = () => {
@@ -21,6 +22,12 @@ export default function PageLayout({
   const handleSignUp = () => {
     router.push("/signup");
   };
+
+  useEffect(()=>{
+    const storeUserId=localStorage.getItem("userId");
+    setUserId(storeUserId);
+
+  },[])
 
   const linkClass = (path: string) =>
     pathname === path
