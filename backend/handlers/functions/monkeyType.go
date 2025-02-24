@@ -13,7 +13,6 @@ import (
 	"github.com/google/uuid"
 )
 
-
 func InsertPersonalBestsIntoDb(personalBests models.MTPersonalBestResponse, uid uuid.UUID) error {
 	for interval, pbList := range personalBests.Data {
 		for _, pb := range pbList {
@@ -51,7 +50,7 @@ func InsertPersonalBestRecord(pb models.MTPersonalBests, interval string, uid uu
 		Numbers:     pb.Numbers,
 		Hash:        hash,
 		UserID:      uid,
-		TimeMode: interval,
+		TimeMode:    interval,
 	}
 
 	result := initializers.DB.Create(&pbModel)
