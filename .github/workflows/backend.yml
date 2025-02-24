@@ -28,11 +28,12 @@ jobs:
         cd backend
         go build -o app
         
-    - name: Stop existing service
-      run: |
-        sudo systemctl stop colosseum-backend || true
-        
     - name: Deploy
       run: |
-        sudo cp backend/app /usr/local/bin/colosseum-backend
-        sudo systemctl restart colosseum-backend
+        # Create a deployment directory with correct permissions
+        mkdir -p $HOME/colosseum-backend
+        cp backend/app $HOME/colosseum-backend/
+        
+        # Use systemctl with --user flag for user-level service
+        systemctl --user stop colosseum-backend || true
+        systemctl --user start colosseum-backend
