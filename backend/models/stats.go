@@ -84,6 +84,7 @@ type MTPersonalBestsDB struct {
 	WordsPerMin float64   `json:"wpm"`
 	Timestamp   time.Time `json:"timestamp"`
 	Numbers     bool      `json:"numbers,omitempty"`
+    TimeMode    string    `json:"timeMode"` 
 	UserID      uuid.UUID `gorm:"type:uuid;not null" json:"userId"`                                 // Foreign key to User table
 	User        User      `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"` // GORM association
 }

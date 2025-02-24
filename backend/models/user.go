@@ -22,6 +22,8 @@ type User struct {
 	ProfilePic       sql.NullString `json:"profilPic"`
 	Ban              bool           `gorm:"default:0" json:"ban"`
 	MonkeyTypeApiKey sql.NullString `gorm:"column:monkey_type_api_key" json:"monkeyTypeApiKey"`
+	GithubUsername   sql.NullString `json:"githubUsername"`
+	MonkeyTypeProfileUrl sql.NullString `json:"monkeyTypeProfileUrl"`
 	Skills           pq.StringArray `gorm:"type:text[]" json:"skills"`
 	Branch           string         `json:"branch"`
 	Year             int            `gorm:"not null;default:1" json:"year"`

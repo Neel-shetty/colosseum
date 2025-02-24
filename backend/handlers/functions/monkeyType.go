@@ -50,6 +50,7 @@ func InsertPersonalBestRecord(pb models.MTPersonalBests, interval string, uid uu
 		Numbers:     pb.Numbers,
 		Hash:        hash,
 		UserID:      uid,
+		TimeMode: interval,
 	}
 
 	result := initializers.DB.Create(&pbModel)

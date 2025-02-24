@@ -75,11 +75,11 @@ func main() {
 	// app.Get("/streak/:username", functions.GetUserStreak)
 	app.Get("/streak/:username", functions.FetchStats)
 	app.Get("/leaderboard", handlers.Leaderboard)
+	app.Get("/user/:id", handlers.GetUserById)
 
 	app.Use(middlerwares.AuthMiddleware)
 	// authorized routes
 	app.Get("/user", handlers.GetUser)
-	app.Get("/user/:id", handlers.GetUserById)
 	app.Get("/check-onboarding", handlers.CheckOnBoarding)
 	app.Post("/set-onboarding", handlers.SetOnBoardingFalse)
 	app.Patch("/user", handlers.UpdateUser)
