@@ -16,7 +16,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.23'
+        go-version: '1.21'
         
     - name: Install dependencies
       run: |
@@ -30,10 +30,15 @@ jobs:
         
     - name: Deploy
       run: |
-        # Create a deployment directory with correct permissions
+        # Create deployment directory
         mkdir -p $HOME/colosseum-backend
         cp backend/app $HOME/colosseum-backend/
         
-        # Use systemctl with --user flag for user-level service
-        systemctl --user stop colosseum-backend || true
-        systemctl --user start colosseum-backend
+        # Kill existing process if running
+        pkill -f colosseum-backend || true
+        
+        # Start the new process in background
+        nohup $HOME/colosseum-backend/app > $HOME/colosseum-backend/app.log 2>&1 &
+        
+        # Save PID for future reference
+        echo $! > $HOME/colosseum-backend/app.pid
