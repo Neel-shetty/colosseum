@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 )
 
+
 func InsertPersonalBestsIntoDb(personalBests models.MTPersonalBestResponse, uid uuid.UUID) error {
 	for interval, pbList := range personalBests.Data {
 		for _, pb := range pbList {
